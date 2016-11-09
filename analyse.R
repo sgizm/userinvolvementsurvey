@@ -48,6 +48,7 @@ data$useractivities.testing <- data$Testing
 data$useractivities.after.release <- data$The.activities.after.release
 data$useractivities.other <- data$Other
 data$useractivities.other.open <- data$If.other..please.specify..separate.with.commas.
+useractivities.options <- c("Specifying requirements", "Designing software", "Implementing software", "Testing", "The activities after release", "Other")
 
 # 2.2. How much do you agree with the following statements? (User involvement statements)
 data$userinv.S1 <- data$X2.2..How.much.do.you.agree.with.the.following.statements...I.know.who.uses.the.software.I.contribute.to.in.my.work
@@ -204,3 +205,30 @@ summary(teamsize)
 ggplot(data, aes(x=teamsize)) +
   geom_histogram() +
   labs(x="Team size", y="Frequency")
+
+######################################################################
+# Analysis
+######################################################################
+
+## Section 2
+
+# 2.1 In which development activities are users involved in your company? (click all that apply)
+useractivities.specifying.requirements.count <- sum(data$useractivities.specifying.requirements, na.rm=TRUE)
+useractivities.designing.software.count <- sum(data$useractivities.designing.software, na.rm=TRUE)
+useractivities.implementing.software <- sum(data$useractivities.implementing.software, na.rm=TRUE)
+useractivities.testing <- sum(data$useractivities.testing, na.rm=TRUE)
+useractivities.after.release <- sum(data$useractivities.after.release, na.rm=TRUE)
+useractivities.other <- sum(data$useractivities.other, na.rm=TRUE)
+useractivities <- data.frame(Activity=useractivities.options,
+                             Frequency=c(
+                               useractivities.specifying.requirements.count,
+                               useractivities.designing.software.count,
+                               useractivities.implementing.software,
+                               useractivities.testing,
+                               useractivities.after.release,
+                               useractivities.other))
+
+print("Frequencies of development activities that users are involved in")
+summary(useractivities)
+ggplot(data=useractivities, aes(x=Activity, y=Frequency)) +
+  geom_bar(stat="identity")
