@@ -10,6 +10,7 @@
 library(foreign)
 library(ggplot2)
 
+POPULATION.SIZE = 100 # TODO: fix this
 CURRENTYEAR <- 1900 + as.POSIXlt(Sys.Date())$year
 
 ######################################################################
@@ -31,7 +32,9 @@ data$jobfunction.other <- data$If.other..please.specify
 data$worktime <- data$X1.2.How.long.have.you.been.working.in.your.current.company.role.
 data$birthyear <- data$X1.3.What.is.your.year.of.birth.
 data$age <- CURRENTYEAR - data$birthyear
-data$gender <- data$X1.4.Which.of.the.following.best.describes.you....
+data$gender <- factor(data$X1.4.Which.of.the.following.best.describes.you....,
+                      levels = c("F", "M", "NA"),
+                      labels = c("Female", "Male", "Other / prefer not to say"))
 
 data$teamsize <- factor(data$X1.5.What.is.the.size.of.your.primary.work.team....,
                         levels = c(0:4,"NA"),
@@ -53,7 +56,7 @@ data$userinv.S3 <- data$X2.2..How.much.do.you.agree.with.the.following.statement
 data$userinv.S4 <- data$X2.2..How.much.do.you.agree.with.the.following.statements...I.have.sufficient.information.about.users..needs
 data$userinv.S5 <- data$X2.2..How.much.do.you.agree.with.the.following.statements...I.have.information.about.users.that.is.relevant.for.my.work.
 data$userinv.S6 <- data$X2.2..How.much.do.you.agree.with.the.following.statements...The.information.I.have.about.users.is.up.to.date
-data$userinv.statements <- c(
+userinv.statements <- c(
   "I know who uses the software I contribute to in my work",
   "I need to ask for permission to contact users",
   "I frequently have direct contact with users",
@@ -70,19 +73,19 @@ data$userinf.tst <- data$X2.3.In.your.experience..how.easy.is.it.for.the.followi
 data$userinf.arc <- data$X2.3.In.your.experience..how.easy.is.it.for.the.following.to.get.information.from.users...Software.architects.
 data$userinf.ops <- data$X2.3.In.your.experience..how.easy.is.it.for.the.following.to.get.information.from.users...System.or.network.operators
 data$userinf.slf <- data$X2.3.In.your.experience..how.easy.is.it.for.the.following.to.get.information.from.users...Myself
-data$userinf.options <- c("Managers", "UX designers", "Software developers", "Software testers", "Software architects", "System or network operators", "Myself")
+userinf.options <- c("Managers", "UX designers", "Software developers", "Software testers", "Software architects", "System or network operators", "Myself")
 
 # 2.4 How often do you use the following ways to get information about users?
 data$infofreq.O1 <- data$X2.4.How.often.do.you.use.the.following.ways.to.get.information.about.users...I.remotely.observe.users.when.they.are.using.the.software..e.g...screen.sharing.
 data$infofreq.O2 <- data$X2.4.How.often.do.you.use.the.following.ways.to.get.information.about.users...I.am.physically.present.with.users.when.they.are.using.the.software..e.g...talk.aloud.study.
 data$infofreq.O3 <- data$X2.4.How.often.do.you.use.the.following.ways.to.get.information.about.users...I.interact.with.users.in.person.after.they.used.the.software..e.g...post.use.interview.
 data$infofreq.O4 <- data$X2.4.How.often.do.you.use.the.following.ways.to.get.information.about.users...Through.recorded.usage.data..e.g...log.data.or.video.
-data$infofreq.statements <- c(
+infofreq.statements <- c(
   "I remotely observe users when they are using the software (e.g., screen sharing)",
   "I am physically present with users when they are using the software (e.g., talk-aloud study)",
   "I interact with users in person after they used the software (e.g., post-use interview)",
   "Through recorded usage data (e.g., log data or video)")
-data$infofreq.options <- c("Never", "Rarely", "Sometimes", "Often", "Always")
+infofreq.options <- c("Never", "Rarely", "Sometimes", "Often", "Always")
 
 # 2.5 Try to remember a situation where you knew that involving users in development would be useful, but you could not involve them. Please describe the situation and what challenges you faced.
 data$userinf.open <- data$X2.5.Try.to.remember.a.situation.where.you.knew.that.involving.users.in.development.would.be.useful..but.you.could.not.involve.them..Please.describe.the.situation.and.what.challenges.you.faced.
@@ -102,7 +105,7 @@ data$understanding.S3 <- data$For.understanding.user.needs.better.........all.da
 data$understanding.S4 <- data$For.understanding.user.needs.better.........focused.data.on.a.specifically.chosen.user.action.is.useful
 data$understanding.S5 <- data$For.understanding.user.needs.better.........users.themselves.must.be.actively.involved.in.development
 data$understanding.S6 <- data$For.understanding.user.needs.better.........we.just.need.to.measure.user.behaviour
-data$understanding.statements <- c(
+understanding.statements <- c(
   "For understanding user needs better data should always be collected because it might be needed later",
   "For understanding user needs better data should only be collected when there is a known need or assumption to test",
   "For understanding user needs better all data about user behaviour is useful",
@@ -110,7 +113,7 @@ data$understanding.statements <- c(
   "For understanding user needs better users themselves must be actively involved in development",
   "For understanding user needs better we just need to measure user behaviour"
 )
-data$understanding.options <- c("Completely disagree", "Disagree", "Neither disagree or agree", "Agree", "Completely agree", "I don't know")
+understanding.options <- c("Completely disagree", "Disagree", "Neither disagree or agree", "Agree", "Completely agree", "I don't know")
 
 # 4.1 How much do you agree with the following statements regarding notifying users about experiments? Please answer according to your personal beliefs.
 data$usernotif.S1 <- data$X4.1.How.much.do.you.agree.with.the.following.statements.regarding.notifying.users.about.experiments..Please.answer.according.to.your.personal.beliefs...Users.do.not.need.to.know.they.are.involved
@@ -120,7 +123,7 @@ data$usernotif.S4 <- data$X4.1.How.much.do.you.agree.with.the.following.statemen
 data$usernotif.S5 <- data$X4.1.How.much.do.you.agree.with.the.following.statements.regarding.notifying.users.about.experiments..Please.answer.according.to.your.personal.beliefs...Users.should.always.be.notified.when.they.are.being.involved.in.an.experiment
 data$usernotif.S6 <- data$X4.1.How.much.do.you.agree.with.the.following.statements.regarding.notifying.users.about.experiments..Please.answer.according.to.your.personal.beliefs...It.is.ok.not.to.disclose.all.the.experiment.details.to.users.involved
 data$usernotif.S7 <- data$X4.1.How.much.do.you.agree.with.the.following.statements.regarding.notifying.users.about.experiments..Please.answer.according.to.your.personal.beliefs...It.is.ok.to.intentionally.deceive.or.mislead.the.user.if.experiment.results.depend.on.it
-data$usernotif.statements <- c(
+usernotif.statements <- c(
   "Users do not need to know they are involved",
   "If we collect personal information, users need to be notified",
   "If no laws are being broken, users do not need to be notified",
@@ -128,7 +131,7 @@ data$usernotif.statements <- c(
   "Users should always be notified when they are being involved in an experiment",
   "It is ok not to disclose all the experiment details to users involved",
   "It is ok to intentionally deceive or mislead the user if experiment results depend on it")
-data$usernotif.options <- c("Completely disagree", "Disagree", "Neither disagree or agree", "Agree", "Completely agree", "I don't know")
+usernotif.options <- c("Completely disagree", "Disagree", "Neither disagree or agree", "Agree", "Completely agree", "I don't know")
 
 # 4.2 How much do you agree with the following statements about involving users in experiments? Please answer according to your personal beliefs.
 data$expinv.S1 <- data$X4.2.How.much.do.you.agree.with.the.following.statements.about.involving.users.in.experiments..Please.answer.according.to.your.personal.beliefs...I.cannot.trust.that.the.experiment.results.will.be.correct
@@ -138,7 +141,7 @@ data$expinv.S4 <- data$X4.2.How.much.do.you.agree.with.the.following.statements.
 data$expinv.S5 <- data$X4.2.How.much.do.you.agree.with.the.following.statements.about.involving.users.in.experiments..Please.answer.according.to.your.personal.beliefs...Users.have.to.be.convinced.of.the.benefit.before.taking.part.in.an.experiment
 data$expinv.S6 <- data$X4.2.How.much.do.you.agree.with.the.following.statements.about.involving.users.in.experiments..Please.answer.according.to.your.personal.beliefs...Experiments.give.users.false.expectations
 data$expinv.S7 <- data$X4.2.How.much.do.you.agree.with.the.following.statements.about.involving.users.in.experiments..Please.answer.according.to.your.personal.beliefs...Experiments.reveal.secrets.about.the.product.strategy
-data$expinv.statements <- c(
+expinv.statements <- c(
   "I cannot trust that the experiment results will be correct",
   "Involving users in experiments is time-consuming",
   "Our company does not have the needed technical infrastructure to run experiments",
@@ -146,21 +149,58 @@ data$expinv.statements <- c(
   "Users have to be convinced of the benefit before taking part in an experiment",
   "Experiments give users false expectations",
   "Experiments reveal secrets about the product strategy")
-data$expinv.options <- c("Completely disagree", "Disagree", "Neither disagree or agree", "Agree", "Completely agree", "I don't know")
+expinv.options <- c("Completely disagree", "Disagree", "Neither disagree or agree", "Agree", "Completely agree", "I don't know")
+
+attach(data)
 
 ######################################################################
 # Descriptive statistics
 ######################################################################
 
+## Data set summary
+print(paste("Number of responses after cleaning:", nrow(data)))
+print(paste("Response rate:", (nrow(data) / POPULATION.SIZE) * 100, "%"))
+
 ## Demographics
 
 # Job function
-
-
+print("Primary job function")
+summary(jobfunction)
+ggplot(data, aes(x=jobfunction)) +
+  geom_histogram() +
+  labs(x="Job function", y="Frequency")
 
 # Work time
-# Birth year
-# Age
-# Gender
-# Team size
+print("How long have you been working in your current role")
+summary(worktime)
+ggplot(data, aes(x=worktime)) +
+  geom_histogram(binwidth=10) +
+  labs(x="Work time", y="Frequency")
 
+# Birth year
+print("Year of birth")
+summary(birthyear)
+ggplot(data, aes(x=birthyear)) +
+  geom_histogram(binwidth=1) +
+  labs(x="Year of birth", y="Frequency")
+
+# Age
+print("Age")
+summary(age)
+ggplot(data, aes(x=age)) +
+  geom_histogram(binwidth=1) +
+  labs(x="Age", y="Frequency")
+
+# Gender
+print("Gender")
+summary(gender)
+ggplot(data, aes(x=gender)) +
+  geom_histogram() +
+  labs(x="Gender", y="Frequency")
+
+# Team size
+print("Team size")
+summary(teamsize)
+ggplot(data, aes(x=teamsize)) +
+  geom_histogram() +
+  labs(x="Team size", y="Frequency")
