@@ -10,7 +10,7 @@
 library(foreign)
 library(ggplot2)
 
-CURRENTYEAR <- 2016
+CURRENTYEAR <- 1900 + as.POSIXlt(Sys.Date())$year
 
 ######################################################################
 # Read raw data files
