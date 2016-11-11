@@ -1,6 +1,7 @@
 ######################################################################
 # Analysis script for User Involvement Survey
 # Note: set working directory to the location of the survey CSV file
+# Note: run with Rscript analyse.R
 ######################################################################
 
 ######################################################################
