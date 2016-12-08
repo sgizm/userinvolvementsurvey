@@ -234,3 +234,15 @@ print("Frequencies of development activities that users are involved in")
 summary(useractivities)
 ggplot(data=useractivities, aes(x=Activity, y=Frequency)) +
   geom_bar(stat="identity")
+
+# 2.2 How much do you agree with the following statements?
+userinv <- data.frame(Statement=userinv.statements,
+                      Rating=c(
+                        userinv.S1,
+                        userinv.S2,
+                        userinv.S3,
+                        userinv.S4,
+                        userinv.S5,
+                        userinv.S6))
+ggplot(data=userinv, aes(x=Statement, y=Rating, fill=Statement)) +
+  geom_boxplot() + guides(fill=FALSE) + coord_flip()
