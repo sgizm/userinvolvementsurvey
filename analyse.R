@@ -261,3 +261,13 @@ userinf <- data.frame(Statement=userinf.statements,
                         userinf.slf))
 ggplot(data=userinf, aes(x=Statement, y=Rating, fill=Statement)) +
   geom_boxplot() + guides(fill=FALSE) + coord_flip() + scale_y_discrete(labels=userinf.options)
+
+# 2.4 How often do you use the following ways to get information about users?
+infofreq <- data.frame(Statement=infofreq.statements,
+                       Rating=c(
+                         infofreq.O1,
+                         infofreq.O2,
+                         infofreq.O3,
+                         infofreq.O4))
+ggplot(data=infofreq, aes(x=Statement, y=Rating, fill=Statement)) +
+  geom_boxplot() + guides(fill=FALSE) + coord_flip() + scale_y_discrete(labels=infofreq.options)
