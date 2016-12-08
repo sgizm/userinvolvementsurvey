@@ -32,6 +32,7 @@ data$jobfunction.other <- data$If.other..please.specify
 
 data$worktime <- data$X1.2.How.long.have.you.been.working.in.your.current.company.role.
 data$birthyear <- data$X1.3.What.is.your.year.of.birth.
+data$birthyear[31] <- data$birthyear[31] + 1900 # Fix data entry error
 data$age <- CURRENTYEAR - data$birthyear
 data$gender <- factor(data$X1.4.Which.of.the.following.best.describes.you....,
                       levels = c("F", "M", "NA"),
