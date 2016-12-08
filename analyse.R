@@ -238,7 +238,7 @@ ggplot(data=useractivities, aes(x=Activity, y=Frequency)) +
   geom_bar(stat="identity")
 
 # 2.2 How much do you agree with the following statements?
-userinv <- data.frame(Statement=userinv.statements,
+userinv <- data.frame(Statement=factor(rep(userinv.statements, each=length(userinv.S1))),
                       Rating=c(
                         userinv.S1,
                         userinv.S2,
@@ -247,10 +247,10 @@ userinv <- data.frame(Statement=userinv.statements,
                         userinv.S5,
                         userinv.S6))
 ggplot(data=userinv, aes(x=Statement, y=Rating, fill=Statement)) +
-  geom_boxplot() + guides(fill=FALSE) + coord_flip() + scale_y_discrete(labels=userinv.options)
+  geom_boxplot() + guides(fill=FALSE) + coord_flip()
 
 # 2.3 In your experience, how easy is it for the following to get information from users?
-userinf <- data.frame(Statement=userinf.statements,
+userinf <- data.frame(Statement=factor(rep(userinf.statements, each=length(userinf.mgr))),
                       Rating=c(
                         userinf.mgr,
                         userinf.uxd,
@@ -260,14 +260,14 @@ userinf <- data.frame(Statement=userinf.statements,
                         userinf.ops,
                         userinf.slf))
 ggplot(data=userinf, aes(x=Statement, y=Rating, fill=Statement)) +
-  geom_boxplot() + guides(fill=FALSE) + coord_flip() + scale_y_discrete(labels=userinf.options)
+  geom_boxplot() + guides(fill=FALSE) + coord_flip()
 
 # 2.4 How often do you use the following ways to get information about users?
-infofreq <- data.frame(Statement=infofreq.statements,
+infofreq <- data.frame(Statement=factor(rep(infofreq.statements, each=length(infofreq.O1))),
                        Rating=c(
                          infofreq.O1,
                          infofreq.O2,
                          infofreq.O3,
                          infofreq.O4))
 ggplot(data=infofreq, aes(x=Statement, y=Rating, fill=Statement)) +
-  geom_boxplot() + guides(fill=FALSE) + coord_flip() + scale_y_discrete(labels=infofreq.options)
+  geom_boxplot() + guides(fill=FALSE) + coord_flip()
