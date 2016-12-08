@@ -67,6 +67,7 @@ userinv.statements <- c(
   "I have information about users that is relevant for my work",
   "The information I have about users is up to date"
 )
+userinv.options <- c("Completely disagree", "Disagree", "Neither disagree or agree", "Agree", "Completely agree", "I don't know")
 
 # 2.3 In your experience, how easy is it for the following to get information from users?
 data$userinf.mgr <- data$X2.3.In.your.experience..how.easy.is.it.for.the.following.to.get.information.from.users...Managers
@@ -245,4 +246,4 @@ userinv <- data.frame(Statement=userinv.statements,
                         userinv.S5,
                         userinv.S6))
 ggplot(data=userinv, aes(x=Statement, y=Rating, fill=Statement)) +
-  geom_boxplot() + guides(fill=FALSE) + coord_flip()
+  geom_boxplot() + guides(fill=FALSE) + coord_flip() + scale_y_discrete(labels=userinv.options)
