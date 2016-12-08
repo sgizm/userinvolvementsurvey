@@ -77,7 +77,8 @@ data$userinf.tst <- data$X2.3.In.your.experience..how.easy.is.it.for.the.followi
 data$userinf.arc <- data$X2.3.In.your.experience..how.easy.is.it.for.the.following.to.get.information.from.users...Software.architects.
 data$userinf.ops <- data$X2.3.In.your.experience..how.easy.is.it.for.the.following.to.get.information.from.users...System.or.network.operators
 data$userinf.slf <- data$X2.3.In.your.experience..how.easy.is.it.for.the.following.to.get.information.from.users...Myself
-userinf.options <- c("Managers", "UX designers", "Software developers", "Software testers", "Software architects", "System or network operators", "Myself")
+userinf.statements <- c("Managers", "UX designers", "Software developers", "Software testers", "Software architects", "System or network operators", "Myself")
+userinf.options <- c("Very difficult", "Difficult", "Neither easy nor difficult", "Easy", "Very easy", "I don't know")
 
 # 2.4 How often do you use the following ways to get information about users?
 data$infofreq.O1 <- data$X2.4.How.often.do.you.use.the.following.ways.to.get.information.about.users...I.remotely.observe.users.when.they.are.using.the.software..e.g...screen.sharing.
@@ -247,3 +248,16 @@ userinv <- data.frame(Statement=userinv.statements,
                         userinv.S6))
 ggplot(data=userinv, aes(x=Statement, y=Rating, fill=Statement)) +
   geom_boxplot() + guides(fill=FALSE) + coord_flip() + scale_y_discrete(labels=userinv.options)
+
+# 2.3 In your experience, how easy is it for the following to get information from users?
+userinf <- data.frame(Statement=userinf.statements,
+                      Rating=c(
+                        userinf.mgr,
+                        userinf.uxd,
+                        userinf.dev,
+                        userinf.tst,
+                        userinf.arc,
+                        userinf.ops,
+                        userinf.slf))
+ggplot(data=userinf, aes(x=Statement, y=Rating, fill=Statement)) +
+  geom_boxplot() + guides(fill=FALSE) + coord_flip() + scale_y_discrete(labels=userinf.options)
