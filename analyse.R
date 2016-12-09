@@ -271,3 +271,46 @@ infofreq <- data.frame(Statement=factor(rep(infofreq.statements, each=length(inf
                          infofreq.O4))
 ggplot(data=infofreq, aes(x=Statement, y=Rating, fill=Statement)) +
   geom_boxplot() + guides(fill=FALSE) + coord_flip()
+
+#3.1
+ggplot(data, aes(x=condexp)) +
+  geom_bar(fill="#FF9999", colour="#FF9999") +
+  labs(x="Conducting experiments", y="Frequency")
+
+#3.3
+understanding <- data.frame(Statement=factor(rep(understanding.statements, each=length(understanding.S1))),
+                      Rating=c(
+                        understanding.S1,
+                        understanding.S2,
+                        understanding.S3,
+                        understanding.S4,
+                        understanding.S5,
+                        understanding.S6))
+ggplot(data=understanding, aes(x=Statement, y=Rating, fill=Statement)) +
+  geom_boxplot() + guides(fill=FALSE) + coord_flip()
+
+#4.1
+undernotif <- data.frame(Statement=factor(rep(usernotif.statements, each=length(usernotif.S1))),
+                            Rating=c(
+                              usernotif.S1,
+                              usernotif.S2,
+                              usernotif.S3,
+                              usernotif.S4,
+                              usernotif.S5,
+                              usernotif.S6,
+                              usernotif.S7))
+ggplot(data=undernotif, aes(x=Statement, y=Rating, fill=Statement)) +
+  geom_boxplot() + guides(fill=FALSE) + coord_flip()
+
+#4.2
+expinv <- data.frame(Statement=factor(rep(expinv.statements, each=length(expinv.S1))),
+                         Rating=c(
+                           expinv.S1,
+                           expinv.S2,
+                           expinv.S3,
+                           expinv.S4,
+                           expinv.S5,
+                           expinv.S6,
+                           expinv.S7))
+ggplot(data=expinv, aes(x=Statement, y=Rating, fill=Statement)) +
+  geom_boxplot() + guides(fill=FALSE) + coord_flip()
