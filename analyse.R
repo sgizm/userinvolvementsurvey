@@ -272,12 +272,12 @@ infofreq <- data.frame(Statement=factor(rep(infofreq.statements, each=length(inf
 ggplot(data=infofreq, aes(x=Statement, y=Rating, fill=Statement)) +
   geom_boxplot() + guides(fill=FALSE) + coord_flip()
 
-#3.1
+# 3.1 Does your company conduct experiments involving the users?
 ggplot(data, aes(x=condexp)) +
   geom_bar(fill="#FF9999", colour="#FF9999") +
   labs(x="Conducting experiments", y="Frequency")
 
-#3.3
+# 3.3 Below are three pairs of statements about collecting data for understanding user needs. How much do you agree with each statement?
 understanding <- data.frame(Statement=factor(rep(understanding.statements, each=length(understanding.S1))),
                       Rating=c(
                         understanding.S1,
@@ -289,7 +289,7 @@ understanding <- data.frame(Statement=factor(rep(understanding.statements, each=
 ggplot(data=understanding, aes(x=Statement, y=Rating, fill=Statement)) +
   geom_boxplot() + guides(fill=FALSE) + coord_flip()
 
-#4.1
+# 4.1 How much do you agree with the following statements regarding notifying users about experiments? Please answer according to your personal beliefs.
 undernotif <- data.frame(Statement=factor(rep(usernotif.statements, each=length(usernotif.S1))),
                             Rating=c(
                               usernotif.S1,
@@ -302,7 +302,7 @@ undernotif <- data.frame(Statement=factor(rep(usernotif.statements, each=length(
 ggplot(data=undernotif, aes(x=Statement, y=Rating, fill=Statement)) +
   geom_boxplot() + guides(fill=FALSE) + coord_flip()
 
-#4.2
+# 4.2 How much do you agree with the following statements about involving users in experiments? Please answer according to your personal beliefs.
 expinv <- data.frame(Statement=factor(rep(expinv.statements, each=length(expinv.S1))),
                          Rating=c(
                            expinv.S1,
