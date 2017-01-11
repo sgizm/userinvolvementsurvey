@@ -11,7 +11,7 @@
 library(foreign)
 library(ggplot2)
 
-POPULATION.SIZE = 231
+POPULATION.SIZE = 35
 CURRENTYEAR <- 1900 + as.POSIXlt(Sys.Date())$year
 
 ######################################################################
