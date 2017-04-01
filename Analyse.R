@@ -10,12 +10,6 @@
 
 library(foreign)
 library(ggplot2)
-library(data.table)
-library(gmodels)
-library(Hmisc)
-library(corrplot)
-library(reshape2)
-
 
 POPULATION.SIZE = 35
 CURRENTYEAR <- 1900 + as.POSIXlt(Sys.Date())$year
@@ -24,40 +18,29 @@ CURRENTYEAR <- 1900 + as.POSIXlt(Sys.Date())$year
 # Read raw data files
 ######################################################################
 
-data <- read.csv("raporttii.csv")
-data <- data.frame(data)
+data <- read.csv("raportti.csv")
+
 ######################################################################
 # Preprocess
 ######################################################################
 
 # Demographics
-data$jobfunction <- factor(data$X1.1.Which.of.the.following.most.closely.matches.your.primary.job.function..,
+data$jobfunction <- factor(data$X1.1.Which.of.the.following.most.closely.matches.your.primary.job.function....,
                            levels = c(0:6),
                            labels = c("Developing software", "Testing software", "UX Design", "Management", "Operations", "Architecture", "Other"))
 data$jobfunction.other <- data$If.other..please.specify
-data$jobfunction[4] <- "Architecture" #Fixing
-data$jobfunction.other[4] <- ""
-data$jobfunction[9] <- "Management" #Fixing custoemr manager to mng
-data$jobfunction.other[9] <- ""
-data$jobfunction[15] <- "Management" #Fixing product owner to mng
-data$jobfunction.other[15] <- ""
 
 data$worktime <- data$X1.2.How.long.have.you.been.working.in.your.current.company.role.
-data$worktime[5] <- NA #fixing
-#[15:58, 1/26/2017] Fabian Fagerholm: and the scale will draw better                        
-#[15:59, 1/26/2017] Fabian Fagerholm: but we have to remember that when reporting
-
 data$birthyear <- data$X1.3.What.is.your.year.of.birth.
 data$birthyear[31] <- data$birthyear[31] + 1900 # Fix data entry error
 data$age <- CURRENTYEAR - data$birthyear
-data$gender <- factor(data$X1.4.Which.of.the.following.best.describes.you..,
+data$gender <- factor(data$X1.4.Which.of.the.following.best.describes.you....,
                       levels = c("F", "M", "NA"),
                       labels = c("Female", "Male", "Other / prefer not to say"))
 
-data$teamsize <- factor(data$X1.5.What.is.the.size.of.your.primary.work.team..,
-                        levels = c(0:4,""),
+data$teamsize <- factor(data$X1.5.What.is.the.size.of.your.primary.work.team....,
+                        levels = c(0:4,"NA"),
                         labels = c("< 3", "3-5", "6-10", "11-20", ">20", "No team"))
-
 
 # 2.1 In which development activities are users involved in your company? (click all that apply)
 data$useractivities.specifying.requirements <- data$Specifying.requirements
@@ -74,7 +57,7 @@ data$userinv.S1 <- data$X2.2..How.much.do.you.agree.with.the.following.statement
 data$userinv.S2 <- data$X2.2..How.much.do.you.agree.with.the.following.statements...I.need.to.ask.for.permission.to.contact.users
 data$userinv.S3 <- data$X2.2..How.much.do.you.agree.with.the.following.statements...I.frequently.have.direct.contact.with.users
 data$userinv.S4 <- data$X2.2..How.much.do.you.agree.with.the.following.statements...I.have.sufficient.information.about.users..needs
-data$userinv.S5 <- data$X2.2..How.much.do.you.agree.with.the.following.statements...I.have.information.about.users.that.is.relevant.for.my.work
+data$userinv.S5 <- data$X2.2..How.much.do.you.agree.with.the.following.statements...I.have.information.about.users.that.is.relevant.for.my.work.
 data$userinv.S6 <- data$X2.2..How.much.do.you.agree.with.the.following.statements...The.information.I.have.about.users.is.up.to.date
 userinv.statements <- c(
   "I know who uses the software I contribute to in my work",
@@ -113,7 +96,7 @@ infofreq.options <- c("Never", "Rarely", "Sometimes", "Often", "Always")
 data$userinf.open <- data$X2.5.Try.to.remember.a.situation.where.you.knew.that.involving.users.in.development.would.be.useful..but.you.could.not.involve.them..Please.describe.the.situation.and.what.challenges.you.faced.
 
 # 3.1 Does your company conduct experiments involving the users?
-data$condexp <- factor(data$X3.1.Does.your.company.conduct.experiments.involving.the.users..,
+data$condexp <- factor(data$X3.1.Does.your.company.conduct.experiments.involving.the.users....,
                        levels = c(1:4, "NA"),
                        labels = c("Never", "Rarely", "Occasionally", "Yes, actively", "I don't know"))
 
@@ -128,12 +111,12 @@ data$understanding.S4 <- data$For.understanding.user.needs.better.........focuse
 data$understanding.S5 <- data$For.understanding.user.needs.better.........users.themselves.must.be.actively.involved.in.development
 data$understanding.S6 <- data$For.understanding.user.needs.better.........we.just.need.to.measure.user.behaviour
 understanding.statements <- c(
-  "..data should always be collected because it might be needed later",
-  "..data should only be collected when there is a known need or assumption to test",
-  "..all data about user behaviour is useful",
-  "..focused data on a specifically chosen user action is useful",
-  "..users themselves must be actively involved in development",
-  "..we just need to measure user behaviour"
+  "For understanding user needs better data should always be collected because it might be needed later",
+  "For understanding user needs better data should only be collected when there is a known need or assumption to test",
+  "For understanding user needs better all data about user behaviour is useful",
+  "For understanding user needs better focused data on a specifically chosen user action is useful",
+  "For understanding user needs better users themselves must be actively involved in development",
+  "For understanding user needs better we just need to measure user behaviour"
 )
 understanding.options <- c("Completely disagree", "Disagree", "Neither disagree or agree", "Agree", "Completely agree", "I don't know")
 
@@ -189,55 +172,43 @@ print(paste("Response rate:", (nrow(data) / POPULATION.SIZE) * 100, "%"))
 print("Primary job function")
 summary(jobfunction)
 ggplot(data, aes(x=jobfunction)) +
-  geom_bar(fill="#FF9999", colour="#FF9999") +
+  geom_histogram() +
   labs(x="Job function", y="Frequency")
-#ggplot(data,aes(x = factor(""), fill=jobfunction))+geom_bar()+ coord_polar(theta = "y")  +scale_x_discrete("") #alternative pie chart
-
-#Other job functions
-y <- droplevels(data[!is.na(data$jobfunction.other),]$jobfunction.other)
-plot(y, col=brewer.pal(9, "GnBu"),  xlab="Other job functions", ylab="Frequency")
 
 # Work time
 print("How long have you been working in your current role")
 summary(worktime)
 ggplot(data, aes(x=worktime)) +
   geom_histogram(binwidth=10) +
-  labs(x="Work time", y="Frequency") 
+  labs(x="Work time", y="Frequency")
 
 # Birth year
 print("Year of birth")
 summary(birthyear)
 ggplot(data, aes(x=birthyear)) +
-  geom_histogram(binwidth=1, fill="#FF9999", colour="#FF9999") +
+  geom_histogram(binwidth=1) +
   labs(x="Year of birth", y="Frequency")
 
 # Age
 print("Age")
 summary(age)
 ggplot(data, aes(x=age)) +
-  geom_density(fill="#FF9999", colour="#FF9999") +
-  labs(x="Age", y="Density")
-
-ggplot(data, aes(x=age)) + 
-  geom_histogram(aes(y=..density..),# Histogram with density instead of count on y-axis
-                 binwidth=.5,
-                 colour="black", fill="white") +
-  geom_density(alpha=.2, fill="#FF9999", colour="#FF9999")  # Overlay with transparent density plot
+  geom_histogram(binwidth=1) +
+  labs(x="Age", y="Frequency")
 
 # Gender
 print("Gender")
 summary(gender)
 ggplot(data, aes(x=gender)) +
-  geom_bar(fill="#FF9999", colour="#FF9999") +
+  geom_histogram() +
   labs(x="Gender", y="Frequency")
 
 # Team size
 print("Team size")
 summary(teamsize)
 ggplot(data, aes(x=teamsize)) +
-  geom_bar(fill="#FF9999", colour="#FF9999") +
+  geom_histogram() +
   labs(x="Team size", y="Frequency")
-
 
 ######################################################################
 # Analysis
@@ -264,7 +235,7 @@ useractivities <- data.frame(Activity=useractivities.options,
 print("Frequencies of development activities that users are involved in")
 summary(useractivities)
 ggplot(data=useractivities, aes(x=Activity, y=Frequency)) +
-  geom_bar(stat="identity", fill="#FF9999", colour="#FF9999")
+  geom_bar(stat="identity")
 
 # 2.2 How much do you agree with the following statements?
 userinv <- data.frame(Statement=factor(rep(userinv.statements, each=length(userinv.S1))),
@@ -308,207 +279,38 @@ ggplot(data, aes(x=condexp)) +
 
 # 3.3 Below are three pairs of statements about collecting data for understanding user needs. How much do you agree with each statement?
 understanding <- data.frame(Statement=factor(rep(understanding.statements, each=length(understanding.S1))),
-                            Rating=c(
-                              understanding.S1,
-                              understanding.S2,
-                              understanding.S3,
-                              understanding.S4,
-                              understanding.S5,
-                              understanding.S6))
+                      Rating=c(
+                        understanding.S1,
+                        understanding.S2,
+                        understanding.S3,
+                        understanding.S4,
+                        understanding.S5,
+                        understanding.S6))
 ggplot(data=understanding, aes(x=Statement, y=Rating, fill=Statement)) +
   geom_boxplot() + guides(fill=FALSE) + coord_flip()
 
 # 4.1 How much do you agree with the following statements regarding notifying users about experiments? Please answer according to your personal beliefs.
 undernotif <- data.frame(Statement=factor(rep(usernotif.statements, each=length(usernotif.S1))),
-                         Rating=c(
-                           usernotif.S1,
-                           usernotif.S2,
-                           usernotif.S3,
-                           usernotif.S4,
-                           usernotif.S5,
-                           usernotif.S6,
-                           usernotif.S7))
+                            Rating=c(
+                              usernotif.S1,
+                              usernotif.S2,
+                              usernotif.S3,
+                              usernotif.S4,
+                              usernotif.S5,
+                              usernotif.S6,
+                              usernotif.S7))
 ggplot(data=undernotif, aes(x=Statement, y=Rating, fill=Statement)) +
   geom_boxplot() + guides(fill=FALSE) + coord_flip()
 
 # 4.2 How much do you agree with the following statements about involving users in experiments? Please answer according to your personal beliefs.
 expinv <- data.frame(Statement=factor(rep(expinv.statements, each=length(expinv.S1))),
-                     Rating=c(
-                       expinv.S1,
-                       expinv.S2,
-                       expinv.S3,
-                       expinv.S4,
-                       expinv.S5,
-                       expinv.S6,
-                       expinv.S7))
+                         Rating=c(
+                           expinv.S1,
+                           expinv.S2,
+                           expinv.S3,
+                           expinv.S4,
+                           expinv.S5,
+                           expinv.S6,
+                           expinv.S7))
 ggplot(data=expinv, aes(x=Statement, y=Rating, fill=Statement)) +
   geom_boxplot() + guides(fill=FALSE) + coord_flip()
-
-## CROSS-ANALYSIS ##
-
-#Team size vs. job functions 
-
-aa <- table(data$jobfunction, data$teamsize)
-aa <- data.frame(aa)
-ggplot(aa,aes(x=Var2,y=Freq,fill=Var1))+geom_bar(stat="identity") + labs(x="Team size",y="Frequencies")
-gplot(aa,aes(x=Var1,y=Freq,fill=Var2))+geom_bar(stat="identity") + labs(x="Job functions",y="Frequencies") + scale_fill_brewer(palette="Set1") + scale_fill_discrete(name="Team size") #it is better
-
-
-#bb <- aa[-c(36:42), ] #no team rowlardan kurtulmaca
-##Hala teamsize vs. jobfunctions buble
-#ggplot(bb, aes(x = Var2, y = Var1, size=Freq)) +
-       geom_point(shape=21, colour = "#000000", fill = "#FF9999") + scale_size_continuous(range = c(0, 30)) +
-       labs(x = "Teamsize", y = "Job Functions") + scale_fill_continuous(low = "#000000", high = "#FF9999") 
-
-#Gender vs. job functions
-ab <- table(data$jobfunction, data$gender)
-ab <- data.frame(ab)
-ggplot(head(ab,14),aes(x=Var1,y=Freq,fill=Var2))+geom_bar(stat="identity") + labs(x="Job Functions",y="Frequencies") + scale_fill_discrete(name="Genders") #took first 14 row to avoid people who does not tell which gender they are
-
-#Activities
-cc <- table(data$jobfunction, data$useractivities.after.release)
-cc<-data.frame(cc)
-ccc <- cc[cc$Var2 == "TRUE",] 
-ggplot(ccc, aes(x=Var1,y=Freq,fill=Var2))+geom_bar(stat="identity") + labs(x="Job functions",y="Frequencies", title="People who marked 'Activities After Release' for user involvement activities") + theme(plot.title = element_text(hjust = 0.5))+guides(fill=FALSE) + theme(plot.title = element_text(lineheight=.6))
-
-#cde<-melt(cc, id.vars='Var1', measure.vars = c('Var2', 'Var3'))
-#cde<-data.frame(cde)
-#cde <- cde[cde$value == "TRUE",] 
-#ggplot(cde, aes(Var1,value)) + geom_point() + stat_smooth()
-#table(data[, 3], data[, 9:14])#boyle yaparak jobfunction columniylan activities boolean columnlarini merge edeip bir seyler yapacaktim ama ayni length degil diyor
-#e basit NA leri pairwise omit edeceksin 
-
-#the one below was going to be good but did not work
-ggplot(data,aes(x=data$useractivities.specifying.requirements))+ geom_bar(stat="identity") + guides(fill=FALSE) + coord_flip() + scale_size_continuous(range = c(0, 70)) +  labs(x = "", y = "") + facet_wrap(~data$jobfunction)
-##2.2 how much do you agree with following statements
-ggplot(userinv,aes(x=Statement,y=Rating, fill=Rating))+ geom_boxplot(aes(fill = Statement)) + guides(fill=FALSE) + coord_flip() + scale_size_continuous(range = c(0, 70)) + facet_wrap(~data$jobfunction) +  labs(x = "", y = "") #Bu oldu
-
-#How easy 2.3 (userinf)
-yak <- cbind(userinf.mgr, userinf.uxd, userinf.dev, userinf.tst, userinf.arc, userinf.ops, userinf.slf, jobfunction)
-#df <- melt(yak, id.vars='jobfunction') #created a 'tall' column with jobfunction on one column and its values vs. other variables i.e. userinf
-fff<-melt(yak, id.vars='jobfunction', measure.vars = c('userinf.mgr', 'userinf.uxd', 'userinf.dev', 'userinf.tst', 'userinf.arc', 'userinf.ops', 'userinf.slf')) 
-fff <-data.frame(fff)
-ggplot(fff, aes(x=jobfunction, y=value, fill=variable)) + geom_bar(stat='identity') # bu calisti ama okumasi cok zor bir graph oldu
-ggplot(fff, aes(jobfunction,value, col=variable)) + geom_point() + stat_smooth() + scale_colour_discrete(name  ="how easy it is for", breaks=c("userinf.mgr"), labels=c("manager")) # bu da enteresan bir sey verdi
-#one below is the facet warp
-ggplot(userinf,aes(x=Statement,y=Rating, fill=Rating))+ geom_boxplot(aes(fill = Statement)) + guides(fill=FALSE) + coord_flip() + scale_size_continuous(range = c(0, 70)) + facet_wrap(~data$jobfunction) +  labs(x = "", y = "") #Bu oldu
-
-
-#ggplot(yak, aes(x=jobfunction,y=Freq,fill=Var2))+geom_bar(stat="identity") + labs(x="Job Functions",y="Frequencies") + scale_fill_discrete(name="Genders")
-ggplot(data,aes(x=jobfunction,y=data$userinf.slf, fill=jobfunction))+geom_boxplot() + scale_fill_brewer(palette="PuBu") + guides(fill=FALSE) + coord_flip() + labs(x="Their current job function",y="'People who marked: 'How easy it is to get information from users - myself'")
-ggplot(data,aes(x=jobfunction,y=data$userinf.dev, fill=jobfunction))+geom_boxplot() + guides(fill=FALSE) + coord_flip() + labs(x="Their current job function",y="'People who marked: 'How easy it is to get information from users - developers'")
-ggplot(data,aes(x=jobfunction,y=data$userinf.ops, fill=jobfunction))+geom_boxplot() + guides(fill=FALSE) + coord_flip() + labs(x="Their current job function",y="'People who marked: 'How easy it is to get information from users - operators'")
-ggplot(data,aes(x=jobfunction,y=data$userinf.uxd, fill=jobfunction))+geom_boxplot() + guides(fill=FALSE) + coord_flip() + labs(x="Their current job function",y="'People who marked: 'How easy it is to get information from users - UX designers'")
-#with(data[data$jobfunction == "Management",], #olmadi sadece managerlarin ne dusundugune bakacaktim. subset eyleyemedim
-#ggplot(data,aes(x=jobfunction,y=data$userinf.uxd, fill=jobfunction))+geom_boxplot() + guides(fill=FALSE) + coord_flip() + labs(x="Their current job function",y="'People who marked: 'How easy it is to get information from users - UX designers'")
-
-
-#How often 2.4 (infofreq)
-#bu olmaz. neden cunku rankinglerin onemi var
-#aha <- table(data$jobfunction, data$infofreq.O3)
-#aha <- data.frame(aha)
-#ggplot(aha, aes(x=Var1, y=Freq, fill=Var2))+geom_bar(stat="identity", colour = "#000000", fill = "#FF9999") + labs(x="Roles" ,y="Frequencies") + guides(fill=FALSE)  + ggtitle("the ones who marked 'I interact with users in person after they used the sw") + theme(plot.title = element_text(lineheight=.6))
-ggplot(data,aes(x=jobfunction,y=data$infofreq.O3, fill=jobfunction))+geom_boxplot() + guides(fill=FALSE) + coord_flip() + labs(x="Their current job function",y="'People who marked: 'I interact with users in person after they used the software'")
-ggplot(data,aes(x=jobfunction,y=data$infofreq.O1, fill=jobfunction))+geom_boxplot() + guides(fill=FALSE) + coord_flip() + labs(x="Their current job function",y="'People who marked: 'I remotely observe users when they are using the sw e.g., screen sharing'")
-ggplot(data,aes(x=jobfunction,y=data$infofreq.O4, fill=jobfunction))+geom_boxplot() + guides(fill=FALSE) + coord_flip() + labs(x="Their current job function",y="'People who marked: 'through recorded usage data e.g., log data or video'")
-ggplot(data,aes(x=jobfunction,y=data$infofreq.O2, fill=jobfunction))+geom_boxplot() + guides(fill=FALSE) + coord_flip() + labs(x="Their current job function",y="'People who marked: 'I am physically present with users when they are using the sw e.g., talk-aloud study'")
-
-ggplot(infofreq,aes(x=Statement,y=Rating, fill=Rating))+ geom_boxplot(aes(fill = Statement)) + guides(fill=FALSE) + coord_flip() + scale_size_continuous(range = c(0, 70)) + facet_wrap(~data$jobfunction) +  labs(x = "", y = "") #Bu oldu
-
-
-#Roles over "I need to ask permission"
-ggplot(data,aes(x=jobfunction,y=data$userinv.S2, fill=jobfunction))+geom_boxplot() + guides(fill=FALSE) + coord_flip() + labs(x="Roles",y="'I need to ask permission to contact users'")
-
-#Roles over "I have sufficient info"
-ggplot(data,aes(x=jobfunction,y=data$userinv.S4, fill=jobfunction))+geom_boxplot() + guides(fill=FALSE) + coord_flip() + labs(x="Roles",y="'I have sufficient information about users'")
-#ggplot(data,aes(x=jobfunction,y=data$userinv.S4, fill=jobfunction))+geom_boxplot() + guides(fill=FALSE) + coord_flip()+ labs(x="Roles",y="'I have sufficient information about users'")  + scale_x_discrete(breaks=c("1", "2", "3", "4", "5"), labels= ("Completely disagree", "2", "3", "4", "Completely agree"))
-
-#yok burda boxplot daha mantikli oluyor ustteki yani
-#cd <- table(data$jobfunction, data$userinv.S4)
-#cd<-data.frame(cd)
-#ccc <- cc[cc$Var2 == "TRUE",] 
-#ggplot(cd, aes(x=Var2,y=Freq,fill=Var1))+geom_bar(stat="identity") + labs(x="",y="Roles") + guides(fill=FALSE) + ggtitle("the ones who marked 'the Activities After Release' for user involvement activities") + theme(plot.title = element_text(lineheight=.6))
-
-
-
-
-#3.1. How often conduct experiments
-#iki turlu de olur gibi. dusun. ikinci graphtan i dont know cikarilabilir
-ahan <- table(data$jobfunction, data$condexp)
-ahan <- data.frame(ahan)
-ggplot(ahan, aes(x=Var2, y=Freq, fill=Var1))+geom_bar(stat="identity") + labs(x="Roles" ,y="Frequencies")
-ggplot(ahan, aes(x=Var1, y=Freq, fill=Var2))+geom_bar(stat="identity") + labs(x="Job Functions" ,y="Frequencies") + scale_fill_discrete(name="Statements")+ scale_fill_brewer(palette="YlGnBu")#better
-
-
-#PAIRS 3.2
-#boyle yapacaksan oynaman lazim legendlarla falan ve diger pairlere uygula 
-ggplot(data,aes(x=data$understanding.S1,y=data$understanding.S2,color=jobfunction))+geom_point() + scale_size_continuous(range = c(0, 70)) + facet_wrap(~jobfunction, scales="free_y") +  labs(x = "People who ranked 'data should be always collected'", y = "People who ranked 'data should be only collected when there is a known need'") + scale_fill_continuous(low = "#000000", high = "#FF9999") 
-ggplot(data,aes(x=data$understanding.S3,y=data$understanding.S4,color=jobfunction))+geom_point() + scale_size_continuous(range = c(0, 70)) + facet_wrap(~jobfunction, scales="free_y") +  labs(x = "People who ranked 'all data about user behaviour is useful'", y = "People who ranked 'focused data on specifically chosen user action is useful'") + scale_fill_continuous(low = "#000000", high = "#FF9999") 
-ggplot(data,aes(x=data$understanding.S5,y=data$understanding.S6,color=jobfunction))+geom_point() + scale_size_continuous(range = c(0, 70)) + facet_wrap(~jobfunction, scales="free_y") +  labs(x = "People who ranked 'users themselves must be actively involved in the development'", y = "People who ranked 'we just need to measure user behaviour'") + scale_fill_continuous(low = "#000000", high = "#FF9999") 
-
-ggplot(understanding,aes(x=Statement,y=Rating, fill=Rating))+ geom_boxplot(aes(fill = Statement)) + guides(fill=FALSE) + coord_flip() + scale_size_continuous(range = c(0, 70)) + facet_wrap(~data$jobfunction) +  labs(x = "", y = "") #Bu oldu
-
-
-#melt lost here... down does not work
-hop <- cbind(understanding.S1, understanding.S2, jobfunction) 
-data.frame(hop)
-d2<-melt(hop, id.vars='jobfunction', variable.name = c('understanding.S1', 'understanding.S2'), 
-         value.name = "jobfunction", measure.vars = , na.rm = TRUE)
-data.frame(d2)
-ggplot(d2, aes(jobfunction,value, col=variable)) + geom_point() + stat_smooth() + scale_colour_discrete(name  ="how easy it is for", breaks=c("userinf.mgr"), labels=c("manager")) # bu da enteresan bir sey verdi
-
-##ETHICS
-#4.1 one below is ok but colors to be changed
-cz <- table(data$jobfunction, data$usernotif.S1)
-cz<-data.frame(cz)
-ggplot(cz, aes(x=Var2,y= Freq, fill=Var1))+geom_bar(stat="identity") + labs(x="Roles",y="Frequencies") + scale_fill_discrete(name="Roles")
-#the one below is goodie
-ggplot(data,aes(x=jobfunction,y=data$usernotif.S1, fill=jobfunction))+geom_boxplot() + guides(fill=FALSE) + coord_flip() + labs(x="Roles",y="'Users do not need to know they they are involved'")
-
-#second one below works
-#ggplot(undernotif,aes(x=Statement,y=Rating))+ geom_boxplot() + guides(fill=FALSE) + coord_flip() + scale_size_continuous(range = c(0, 70)) + facet_wrap(~data$jobfunction) +  labs(x = "", y = "") + scale_fill_continuous(low = "#000000", high = "#FF9999")
-ggplot(undernotif,aes(x=Statement,y=Rating, fill=Rating))+ geom_boxplot(aes(fill = Statement)) + guides(fill=FALSE) + coord_flip() + scale_size_continuous(range = c(0, 70)) + facet_wrap(~data$jobfunction) +  labs(x = "", y = "") #Bu oldu
-
-
-#4.2
-ggplot(expinv,aes(x=Statement,y=Rating))+ geom_boxplot(aes(fill = Statement)) + guides(fill=FALSE) + coord_flip() + scale_size_continuous(range = c(0, 70)) + facet_wrap(~data$jobfunction) +  labs(x = "", y = "") #Bu oldu
-
-##Correlations##
-pp <- table(gender, jobfunction)
-pp<- cor(pp, use="pairwise.complete.obs") # works
-cor(age, data$X1.1.Which.of.the.following.most.closely.matches.your.primary.job.function..) #gives -0.16 no real correlation
-corrplot(pp, method = "color") 
-
-cor(age, worktime, use="pairwise.complete.obs") #0.22
-
-M <-cor(table(age, worktime), use="pairwise.complete.obs")
-corrplot(M, method = "color") #plot matrix #does not say much 
-
-cor(data$X1.5.What.is.the.size.of.your.primary.work.team.., X1.1.Which.of.the.following.most.closely.matches.your.primary.job.function.., use="pairwise.complete.obs") #0.53
-cor(data$userinv.S2, userinf.slf, use="pairwise.complete.obs") # -0.5516735
-cor(userinf.dev, userinf.tst, use="pairwise.complete.obs") #0.8996517 #means that users and testers seem to be similar
-cor(infofreq.O3, userinv.S3, use="pairwise.complete.obs") #0.6878795
-cor(usernotif.S5, usernotif.S4, use="pairwise.complete.obs") #-0.6001068
-cor(userinv.S5, userinv.S6, use="pairwise.complete.obs") #0.7812353
-or(understanding.S1, understanding.S3, use="pairwise.complete.obs") #0.7302549
-
-#aggreegated function checking all corr among numerical variables
-roles <- X1.1.Which.of.the.following.most.closely.matches.your.primary.job.function..
-corr_subset <- data[, 58:100]
-corr_subset$roles = roles
-gender_n <- as.numeric(data$X1.4.Which.of.the.following.best.describes.you..) #converting gender factor to numeric and appending to the dataset
-corr_subset$gender = gender_n
-corr_subset <- corr_subset[ ,c(ncol(corr_subset),1:(ncol(corr_subset)-1))] #add roles column and bring it to the front
-numeric_subset <- corr_subset[sapply(corr_subset, is.numeric)]
-numeric_subset_corr<-cor(numeric_subset, use="pairwise.complete.obs")
-corrplot(numeric_subset_corr, method= "color", order="hclust", addrect=8)
-
-#scatterplots
-ggplot(numeric_subset_corr, aes(x=numeric_subset_corr$userinf.tst, y=numeric_subset_corr$userinf.dev)) +
-       geom_point(shape=1) +
-       scale_colour_hue(l=50) + # Use a slightly darker palette than normal
-       geom_smooth(method=lm,   # Add linear regression lines
-                                     se=FALSE)    # Don't add shaded confidence region
-
-pairs(numeric_subset_corr[1:4])
-pairs(numeric_subset_corr[6:11]) #2.2. How much do you agree with the following statements? (User involvement statements)
