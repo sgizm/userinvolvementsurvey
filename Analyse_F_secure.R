@@ -419,10 +419,12 @@ expval <- data.frame(Statement=factor(rep(expval.statements, each=length(expval.
                        expval.S6,
                        expval.S7))
 ggplot(data=expval, aes(x=Statement, y=Rating, fill=Statement)) +
-  geom_boxplot() + guides(fill=FALSE) + coord_flip() + scale_x_discrete(limits=c("other", "dissaminate the experiment results and learnings in my organisation", "invest into learning how to conduct systematic, hypothesis-based experiments", "invest into learning how to conduct systematic, hypothesis-based experiments", "spend work time to design and run experiments", "join a user jury","create a user jury", "meet users in person"))
+  geom_boxplot() + guides(fill=FALSE) + coord_flip() + scale_x_discrete(limits=c("other", "dissaminate the experiment results and learnings in my organisation", "invest into learning how to conduct systematic, hypothesis-based experiments", "spend work time to design and run experiments", "join a user jury","create a user jury", "meet users in person"))
 
 # 5.3 If other please specify
 expval_other <- data$If.other..please.specify.2
+
+
 
 ## CROSS-ANALYSIS ##
 
