@@ -64,7 +64,7 @@ data$useractivities.software.design <- data$Software.design
 data$useractivities.implementation <- data$Implementation
 data$useractivities.testing <- data$Testing
 data$useractivities.after.release <- data$The.activities.after.release
-data$customer.support <- data$Providing.customer.support
+data$useractivities.customer.support <- data$Providing.customer.support
 data$useractivities.consulting <- data$Providing.consulting
 data$useractivities.billing <- data$Billing.services
 data$useractivities.other <- data$Other
