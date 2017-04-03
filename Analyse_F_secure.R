@@ -233,8 +233,8 @@ print(paste("Response rate:", (nrow(data) / POPULATION.SIZE) * 100, "%"))
 print("Primary job function")
 summary(jobfunction)
 ggplot(data, aes(x=jobfunction)) +
-  geom_bar(fill="#FF9999", colour="black") +
-  labs(x="Job function", y="Frequency")
+  geom_bar(fill="#FF9999", colour="white") +
+  labs(x="Job functions", y="Frequency")
 #ggplot(data,aes(x = factor(""), fill=jobfunction))+geom_bar()+ coord_polar(theta = "y")  +scale_x_discrete("") #alternative pie chart
 
 # Work time
@@ -254,28 +254,28 @@ ggplot(data, aes(x=worktime)) +
 print("Gender")
 summary(gender)
 ggplot(data, aes(x=gender)) +
-  geom_bar(fill="#FF9999", colour="black") +
+  geom_bar(fill="white", colour="black") +
   labs(x="Gender", y="Frequency")
 
 # Age range
 print("Age range")
 summary(age_range)
 ggplot(data, aes(x=age_range)) +
-  geom_bar(fill="#FF9999", colour="black") +
-  labs(x="Team size", y="Frequency")
+  geom_bar(fill="lightgoldenrod2", colour="white") +
+  labs(x="Age range", y="Frequency")
 
 # Team size
 print("Team size")
 summary(teamsize)
 ggplot(data, aes(x=teamsize)) +
-  geom_bar(fill="white", colour="black") +
+  geom_bar(fill="lightgoldenrod2", colour="white") +
   labs(x="Team size", y="Frequency")
 
 # End user
 print("End user")
 summary(end_user)
 ggplot(data, aes(x=end_user)) +
-  geom_bar(fill="#FF9999", colour="black") +
+  geom_bar(fill="cadetblue2", colour="white") +
   labs(x="End user", y="Frequency")
 
 ######################################################################
@@ -311,7 +311,7 @@ useractivities <- data.frame(Activity=useractivities.options,
 print("Frequencies of development activities that users are involved in")
 summary(useractivities)
 ggplot(data=useractivities, aes(x=Activity, y=Frequency)) + labs(x="Development activities where users are involved") +
-  geom_bar(stat="identity", fill="#FF9999", colour="black") + scale_x_discrete(limits=c("Forming ideas","Gathering requirements","Software design", "Implementing software", "Testing", "The activities after release", "Customer support", "Consulting", "Billing services", "Other"))
+  geom_bar(stat="identity", fill="lightpink2", colour="black") + scale_x_discrete(limits=c("Forming ideas","Gathering requirements","Software design", "Implementing software", "Testing", "The activities after release", "Customer support", "Consulting", "Billing services", "Other"))
   
 # 2.2 How much do you agree with the following statements?
 userinv <- data.frame(Statement=factor(rep(userinv.statements, each=length(userinv.S1))),
@@ -357,7 +357,7 @@ ggplot(data=infofreq, aes(x=Statement, y=Rating, fill=Statement)) +
 
 # 3.1 Does your company conduct experiments involving the users?
 ggplot(data, aes(x=condexp)) +
-  geom_bar(fill="#FF9999", colour="black") +
+  geom_bar(fill="burlywood1", colour="white") +
   labs(x="Conducting experiments", y="Frequency")
 
 # 3.3 Below are three pairs of statements about collecting data for understanding user needs. How much do you agree with each statement?
