@@ -76,14 +76,13 @@ data$useractivities.software.design <- data$Software.design
 data$useractivities.implementation <- data$Implementation
 data$useractivities.testing <- data$Testing
 data$useractivities.after.release <- data$The.activities.after.release
-
+data$useractivities.commiting.code <- data$Committing.code
 data$useractivities.fixes <- data$Providing.fixes
-data$customer.support <- data$Providing.customer.support
-data$useractivities.consulting <- data$Providing.consulting
-data$useractivities.billing <- data$Billing.services
+data$useractivities.submitting.bugs <- data$Submitting.bugs
+data$useractivities.online.discussion <- data$Participating.in.online.discussion
 data$useractivities.other <- data$Other
 data$useractivities.other.open <- data$If.other..please.specify..separate.with.commas.
-useractivities.options <- c("Forming ideas", "Gathering requirements", "Software design", "Implementing software", "Testing", "The activities after release", "Customer support", "Consulting", "Billing services", "Other")
+useractivities.options <- c("Forming ideas", "Gathering requirements", "Software design", "Implementing software", "Testing", "The activities after release", "Committing code", "Providing fixes", "Submitting bugs", "Participating in online discussion", "Other")
 
 attach(data)
 
@@ -151,3 +150,34 @@ summary(end_user)
 ggplot(data, aes(x=end_user)) +
   geom_bar(fill="cadetblue2", colour="white") +
   labs(x="End user", y="Frequency") + theme(axis.text=element_text(size=13)) + scale_y_continuous(breaks=c(0,5,7,10,14), labels = c("0", "5", "7", "10", "14"))
+
+# 2.1 In which development activities are users involved in your company? (click all that apply)
+useractivities.forming.ideas <- sum(data$useractivities.forming.ideas, na.rm=TRUE)
+useractivities.designing.software <- sum(data$useractivities.gathering.requirements, na.rm=TRUE)
+useractivities.software.design <- sum(data$useractivities.software.design, na.rm=TRUE)
+useractivities.implementation <- sum(data$useractivities.implementation, na.rm=TRUE)
+useractivities.testing <- sum(data$useractivities.testing, na.rm=TRUE)
+useractivities.after.release <- sum(data$useractivities.after.release, na.rm=TRUE)
+useractivities.commiting.code <- sum(data$useractivities.commiting.code, na.rm=TRUE)
+useractivities.providing.fixes <- sum(data$useractivities.providing.fixes, na.rm=TRUE)
+useractivities.submitting.bugs <- sum(data$useractivities.submitting.bugs, na.rm=TRUE)
+useractivities.online.discussion<- sum(data$useractivities.online.discussion, na.rm=TRUE)
+useractivities.other <- sum(data$useractivities.other, na.rm=TRUE)
+useractivities <- data.frame(Activity=useractivities.options,
+                             Frequency=c(
+                               useractivities.forming.ideas,
+                               useractivities.designing.software,
+                               useractivities.software.design,
+                               useractivities.implementation,
+                               useractivities.testing,
+                               useractivities.after.release,
+                               useractivities.commiting.code,
+                               useractivities.providing.fixes,
+                               useractivities.submitting.bugs,
+                               useractivities.online.discussion,
+                               useractivities.other))
+
+print("Frequencies of development activities that users are involved in")
+summary(useractivities)
+ggplot(data=useractivities, aes(x=Activity, y=Frequency)) + labs(x="Development activities where users are involved") +
+  geom_bar(stat="identity", fill="plum4", colour="black") + theme(axis.text=element_text(size=14))+ scale_x_discrete(limits=c("Forming ideas","Gathering requirements","Software design", "Implementing software", "Testing", "The activities after release", "Committing code", "Providing fixes", "Submitting bugs", "Participating in online discussion", "Other")) + scale_y_continuous(breaks=c(0,3,5,8,9,12,13,16,17), labels = c("0", "3", "5", "8", "9", "12", "13", "16", "17"))

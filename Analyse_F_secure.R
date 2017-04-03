@@ -311,7 +311,7 @@ useractivities <- data.frame(Activity=useractivities.options,
 print("Frequencies of development activities that users are involved in")
 summary(useractivities)
 ggplot(data=useractivities, aes(x=Activity, y=Frequency)) + labs(x="Development activities where users are involved") +
-  geom_bar(stat="identity", fill="lightpink2", colour="black") + scale_x_discrete(limits=c("Forming ideas","Gathering requirements","Software design", "Implementing software", "Testing", "The activities after release", "Customer support", "Consulting", "Billing services", "Other"))
+  geom_bar(stat="identity", fill="lightpink2", colour="black") + theme(axis.text=element_text(size=14))+ scale_x_discrete(limits=c("Forming ideas","Gathering requirements","Software design", "Implementing software", "Testing", "The activities after release", "Customer support", "Consulting", "Billing services", "Other"))
   
 # 2.2 How much do you agree with the following statements?
 userinv <- data.frame(Statement=factor(rep(userinv.statements, each=length(userinv.S1))),
@@ -324,7 +324,7 @@ userinv <- data.frame(Statement=factor(rep(userinv.statements, each=length(useri
                         userinv.S6,
                         userinv.S7))
 ggplot(data=userinv, aes(x=Statement, y=Rating, fill=Statement)) +
-  geom_boxplot() + guides(fill=FALSE) + coord_flip() 
+  geom_boxplot() + guides(fill=FALSE) + coord_flip() + theme(axis.text=element_text(size=16))
 # + scale_y_discrete(name="Rating", limits=c("1","2", "3","4","5"))
 
 # 2.3 In your experience, how easy is it for the following to get information from users?
@@ -341,7 +341,7 @@ userinf <- data.frame(Statement=factor(rep(userinf.statements, each=length(useri
                         userinf.tra,
                         userinf.slf))
 ggplot(data=userinf, aes(x=Statement, y=Rating, fill=Statement)) +
-  geom_boxplot() + guides(fill=FALSE) + coord_flip() + scale_x_discrete(limits=c("Myself", "Trainers", "Customer support", "Consultants", "Architects", "UX designers", "Business developers", "Managers, other", "Product managers or owners", "Developers"))
+  geom_boxplot() + guides(fill=FALSE) + coord_flip() + scale_x_discrete(limits=c("Myself", "Trainers", "Customer support", "Consultants", "Architects", "UX designers", "Business developers", "Managers, other", "Product managers or owners", "Developers")) + theme(axis.text=element_text(size=16))
 
 # 2.4 How often do you use the following ways to get information about users?
 infofreq <- data.frame(Statement=factor(rep(infofreq.statements, each=length(infofreq.O1))),
@@ -353,12 +353,12 @@ infofreq <- data.frame(Statement=factor(rep(infofreq.statements, each=length(inf
                          infofreq.O5,
                          infofreq.O6))
 ggplot(data=infofreq, aes(x=Statement, y=Rating, fill=Statement)) +
-  geom_boxplot() + guides(fill=FALSE) + coord_flip()
+  geom_boxplot() + guides(fill=FALSE) + coord_flip() + theme(axis.text=element_text(size=16))
 
 # 3.1 Does your company conduct experiments involving the users?
 ggplot(data, aes(x=condexp)) +
   geom_bar(fill="burlywood1", colour="white") +
-  labs(x="Conducting experiments", y="Frequency")
+  labs(x="Conducting experiments", y="Frequency") + theme(axis.text=element_text(size=16))
 
 # 3.3 Below are three pairs of statements about collecting data for understanding user needs. How much do you agree with each statement?
 understanding <- data.frame(Statement=factor(rep(understanding.statements, each=length(understanding.S1))),
@@ -370,7 +370,7 @@ understanding <- data.frame(Statement=factor(rep(understanding.statements, each=
                               understanding.S5,
                               understanding.S6))
 ggplot(data=understanding, aes(x=Statement, y=Rating, fill=Statement)) +
-  geom_boxplot() + guides(fill=FALSE) + coord_flip() + scale_x_discrete(limits=c("..we need to measure user behaviour to decide what the software should be like","..users themselves must be actively involved in shaping the software", "..focused data on a specific user action or behaviour is useful", "..rich, detailed data about what users do is useful", "..data should only be collected when there is a known need or assumption", "..data should always be collected because it might be needed later" ))
+  geom_boxplot() + guides(fill=FALSE) + coord_flip() + scale_x_discrete(limits=c("..we need to measure user behaviour to decide what the software should be like","..users themselves must be actively involved in shaping the software", "..focused data on a specific user action or behaviour is useful", "..rich, detailed data about what users do is useful", "..data should only be collected when there is a known need or assumption", "..data should always be collected because it might be needed later" )) + theme(axis.text=element_text(size=11))
 
 # 4.1 How much do you agree with the following statements regarding notifying users about experiments? Please answer according to your personal beliefs.
 undernotif <- data.frame(Statement=factor(rep(usernotif.statements, each=length(usernotif.S1))),
@@ -383,7 +383,7 @@ undernotif <- data.frame(Statement=factor(rep(usernotif.statements, each=length(
                            usernotif.S6,
                            usernotif.S7))
 ggplot(data=undernotif, aes(x=Statement, y=Rating, fill=Statement)) +
-  geom_boxplot() + guides(fill=FALSE) + coord_flip()
+  geom_boxplot() + guides(fill=FALSE) + coord_flip() + theme(axis.text=element_text(size=11))
 
 # 4.2 How much do you agree with the following statements about involving users in experiments? Please answer according to your personal beliefs.
 expinv <- data.frame(Statement=factor(rep(expinv.statements, each=length(expinv.S1))),
@@ -396,7 +396,7 @@ expinv <- data.frame(Statement=factor(rep(expinv.statements, each=length(expinv.
                        expinv.S6,
                        expinv.S7))
 ggplot(data=expinv, aes(x=Statement, y=Rating, fill=Statement)) +
-  geom_boxplot() + guides(fill=FALSE) + coord_flip()
+  geom_boxplot() + guides(fill=FALSE) + coord_flip() + theme(axis.text=element_text(size=11))
 
 # 5.1 How much do you agree with the following statements regarding benefits of experimentation? Please answer according to your personal beliefs.
 expben <- data.frame(Statement=factor(rep(expben.statements, each=length(expben.S1))),
@@ -406,7 +406,7 @@ expben <- data.frame(Statement=factor(rep(expben.statements, each=length(expben.
                        expben.S3,
                        expben.S4))
 ggplot(data=expben, aes(x=Statement, y=Rating, fill=Statement)) +
-  geom_boxplot() + guides(fill=FALSE) + coord_flip()
+  geom_boxplot() + guides(fill=FALSE) + coord_flip() + theme(axis.text=element_text(size=11))
 
 # 5.2 In order to know the user value, I would be prepared to ...
 expval <- data.frame(Statement=factor(rep(expval.statements, each=length(expval.S1))),
@@ -419,7 +419,7 @@ expval <- data.frame(Statement=factor(rep(expval.statements, each=length(expval.
                        expval.S6,
                        expval.S7))
 ggplot(data=expval, aes(x=Statement, y=Rating, fill=Statement)) +
-  geom_boxplot() + guides(fill=FALSE) + coord_flip() + scale_x_discrete(limits=c("other", "dissaminate the experiment results and learnings in my organisation", "invest into learning how to conduct systematic, hypothesis-based experiments", "spend work time to design and run experiments", "join a user jury","create a user jury", "meet users in person"))
+  geom_boxplot() + guides(fill=FALSE) + coord_flip() + scale_x_discrete(limits=c("other", "dissaminate the experiment results and learnings in my organisation", "invest into learning how to conduct systematic, hypothesis-based experiments", "spend work time to design and run experiments", "join a user jury","create a user jury", "meet users in person")) + theme(axis.text=element_text(size=11))
 
 # 5.3 If other please specify
 expval_other <- data$If.other..please.specify.2
