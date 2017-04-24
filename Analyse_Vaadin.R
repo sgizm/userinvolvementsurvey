@@ -37,8 +37,11 @@ data <- data.frame(data)
 ###### Demographics #######
 data$jobfunction <- factor(data$X1.1.Which.of.the.following.most.closely.matches.your.primary.job.function..,
                            levels = c(0:10),
-                           labels = c("Developing Vaadin framework", "Developing Vaadin Pro Tools", "Product management", "Management, other", "UX Design", "Software architecture", "Advocating products and services" ,"Providing consulting", "Providing customer support", "Providing training services", "Other"))
+                           labels = c("Developing Vaadin framework", "Developing Vaadin Pro Tools", "Product management", "Management, other", "UX Design", "Software architecture", "Advocating products and services" ,"Providing consulting", "Providing customer support", "Providing training services", "Sales"))
+#fixing: changed other to sales as both were sales anyways
+data$jobfunction[11] <- "Management, other" #fixing: adding "account manager" to management, others 
 data$jobfunction.other <- data$If.other..please.specify
+data$jobfunction.other[11] <- ""
 
 # Worktime
 data$worktime <- data$X1.2.How.long.have.you.been.working.in.your.current.company.role.
@@ -223,6 +226,8 @@ ggplot(data, aes(x=jobfunction)) +
   geom_bar(fill="#FF9999", colour="white") +
   labs(x="Job functions", y="Frequency") + theme(axis.text=element_text(size=13))
 
+data$jobfunction.other
+
 # Gender
 print("Gender")
 summary(gender)
@@ -255,7 +260,7 @@ print("Team size")
 summary(teamsize)
 ggplot(data, aes(x=teamsize)) +
   geom_bar(fill="lightgoldenrod2", colour="white") +
-  labs(x="Team size", y="Frequency") + theme(axis.text=element_text(size=13))
+  labs(x="Team size", y="Frequency") + theme(axis.text=element_text(size=13)) + scale_y_continuous(breaks=c(0,2,3,5,8), labels = c("0", "2", "3", "5", "8"))
 
 # Work location
 print("Work location")
@@ -393,3 +398,44 @@ expinv <- data.frame(Statement=factor(rep(expinv.statements, each=length(expinv.
                        expinv.S7))
 ggplot(data=expinv, aes(x=Statement, y=Rating, fill=Statement)) +
   geom_boxplot() + guides(fill=FALSE) + coord_flip() + theme(axis.text=element_text(size=11))
+
+
+
+####CROSS_ANALYSIS###
+
+jb_names <- c(
+  'Developing Vaadin framework' = "Framework developers",
+  'Developing Vaadin Pro Tools' = "Pro tools developers",
+  'Product management' =  'Product managers',
+  'Management, other' = "Managers, other",
+  'UX Design' = "UX designers",
+  'Advocating products and services' = "Advocates",
+  'Providing consulting' = "Consultants",
+  'Providing customer support' = "Customer support",
+  "Sales" = "Sales"
+)
+
+#2.1 - useractivities over end-user types 
+### Note: cheking the different activities over end-user types did not indicate any remarkable correlation 
+# labeller = as_labeller(jb_names) to be added to face_wrap
+cc <- table(data$end_user, data$useractivities.submitting.bugs)
+cc<-data.frame(cc)
+ccc <- cc[cc$Var2 == "TRUE",] 
+ggplot(ccc, aes(x=Var1,y=Freq,fill=Var2))+geom_bar(stat="identity") + labs(x="end user type", y="Frequencies", title="People who marked 'submitting bugs' for user involvement activities") + theme(plot.title = element_text(hjust = 0.5))+guides(fill=FALSE) + theme(plot.title = element_text(lineheight=.6))
+
+cd <- table(data$end_user, data$useractivities.online.discussion)
+cd<-data.frame(cd)
+ccd <- cd[cd$Var2 == "TRUE",] 
+ggplot(ccd, aes(x=Var1,y=Freq,fill=Var2))+geom_bar(stat="identity") + labs(x="end user type", y="Frequencies", title="People who marked 'forming ideas' for user involvement activities") + theme(plot.title = element_text(hjust = 0.5))+guides(fill=FALSE) + theme(plot.title = element_text(lineheight=.6))
+
+#2.1 - useractivities over jobfunctions, nothing conclusive 
+cx <- table(data$jobfunction, data$useractivities.online.discussion)
+cx<-data.frame(cx)
+ccx <- cx[cx$Var2 == "TRUE",] 
+ggplot(ccx, aes(x=Var1,y=Freq,fill=Var2))+geom_bar(stat="identity") + labs(x="job function", y="Frequencies", title="People who marked 'forming ideas' for user involvement activities") + theme(plot.title = element_text(hjust = 0.5))+guides(fill=FALSE) + theme(plot.title = element_text(lineheight=.6))
+
+#2.2
+ggplot(userinv,aes(x=Statement,y=Rating, fill=Rating))+ geom_boxplot(aes(fill = Statement)) + guides(fill=FALSE) + coord_flip() + scale_size_continuous(range = c(0, 70)) + facet_wrap(~data$jobfunction , labeller = as_labeller(jb_names)) +  labs(x = "", y = "")
+
+
+## nerde kaldin. --> 2.3 e bak ve cross analysis dusunerek devam et
