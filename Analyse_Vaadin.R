@@ -304,8 +304,9 @@ useractivities <- data.frame(Activity=useractivities.options,
 
 print("Frequencies of development activities that users are involved in")
 summary(useractivities)
-ggplot(data=useractivities, aes(x=Activity, y=Frequency)) + labs(x="Development activities where users are involved") +
-  geom_bar(stat="identity", fill="plum4", colour="black") + theme(axis.text=element_text(size=14))+ scale_x_discrete(limits=c("Forming ideas","Gathering requirements","Software design", "Implementing software", "Testing", "The activities after release", "Committing code", "Providing fixes", "Submitting bugs", "Participating in online discussion", "Other")) + scale_y_continuous(breaks=c(0,3,5,8,9,12,13,16,17), labels = c("0", "3", "5", "8", "9", "12", "13", "16", "17"))
+ggplot(data=useractivities, aes(x=Activity, y=Frequency)) +
+  geom_bar(stat="identity", fill="plum4", colour="black") + theme(axis.text=element_text(size=14), axis.text.x = element_text(angle = 45, vjust = 1, hjust=1))+ scale_x_discrete(limits=c("Forming ideas","Gathering requirements","Software design", "Implementing software", "Testing", "The activities after release", "Committing code", "Providing fixes", "Submitting bugs", "Participating in online discussion", "Other")) + scale_y_continuous(breaks=c(0,3,5,8,9,12,13,16,17), labels = c("0", "3", "5", "8", "9", "12", "13", "16", "17"))
+
 
 # 2.2 How much do you agree with the following statements?
 userinv <- data.frame(Statement=factor(rep(userinv.statements, each=length(userinv.S1))),
@@ -348,7 +349,7 @@ infofreq <- data.frame(Statement=factor(rep(infofreq.statements, each=length(inf
                          infofreq.O5,
                          infofreq.O6))
 ggplot(data=infofreq, aes(x=Statement, y=Rating, fill=Statement)) +
-  geom_boxplot() + guides(fill=FALSE) + coord_flip() + theme(axis.text=element_text(size=16))
+  geom_boxplot() + guides(fill=FALSE) + coord_flip() + theme(axis.text=element_text(size=11))
 
 #2.5 Try to remember a situation
 data$userinf.open
@@ -435,7 +436,19 @@ ccx <- cx[cx$Var2 == "TRUE",]
 ggplot(ccx, aes(x=Var1,y=Freq,fill=Var2))+geom_bar(stat="identity") + labs(x="job function", y="Frequencies", title="People who marked 'forming ideas' for user involvement activities") + theme(plot.title = element_text(hjust = 0.5))+guides(fill=FALSE) + theme(plot.title = element_text(lineheight=.6))
 
 #2.2
-ggplot(userinv,aes(x=Statement,y=Rating, fill=Rating))+ geom_boxplot(aes(fill = Statement)) + guides(fill=FALSE) + coord_flip() + scale_size_continuous(range = c(0, 70)) + facet_wrap(~data$jobfunction , labeller = as_labeller(jb_names)) +  labs(x = "", y = "")
+ggplot(userinv,aes(x=Statement,y=Rating, fill=Rating))+ geom_boxplot(aes(fill = Statement)) + guides(fill=FALSE) + coord_flip() + scale_size_continuous(range = c(0, 70)) + facet_wrap(~data$jobfunction , labeller = as_labeller(jb_names)) +  labs(x = "", y = "") + theme(axis.text=element_text(size=11))
 
+#2.3
+ggplot(userinf,aes(x=Statement,y=Rating, fill=Rating))+ geom_boxplot(aes(fill = Statement)) + guides(fill=FALSE) + coord_flip() + scale_size_continuous(range = c(0, 70)) + facet_wrap(~data$jobfunction , labeller = as_labeller(jb_names)) +  labs(x = "", y = "") + theme(axis.text=element_text(size=11))
 
-## nerde kaldin. --> 2.3 e bak ve cross analysis dusunerek devam et
+#2.4
+ggplot(infofreq,aes(x=Statement,y=Rating, fill=Rating))+ geom_boxplot(aes(fill = Statement)) + guides(fill=FALSE) + coord_flip() + scale_size_continuous(range = c(0, 70)) + facet_wrap(~data$jobfunction , labeller = as_labeller(jb_names)) +  labs(x = "", y = "") + theme(axis.text=element_text(size=11))
+
+#3.3
+ggplot(understanding, aes(x=Statement,y=Rating, fill=Rating))+ geom_boxplot(aes(fill = Statement)) + guides(fill=FALSE) + coord_flip() + scale_size_continuous(range = c(0, 70)) + facet_wrap(~data$jobfunction , labeller = as_labeller(jb_names)) +  labs(x = "", y = "") + theme(axis.text=element_text(size=11))
+
+#4.1
+ggplot(undernotif, aes(x=Statement,y=Rating, fill=Rating))+ geom_boxplot(aes(fill = Statement)) + guides(fill=FALSE) + coord_flip() + scale_size_continuous(range = c(0, 70)) + facet_wrap(~data$jobfunction , labeller = as_labeller(jb_names)) +  labs(x = "", y = "") #Bu oldu
+
+#4.2
+ggplot(expinv, aes(x=Statement,y=Rating))+ geom_boxplot(aes(fill = Statement)) + guides(fill=FALSE) + coord_flip() + scale_size_continuous(range = c(0, 70)) + facet_wrap(~data$jobfunction, labeller = as_labeller(jb_names)) +  labs(x = "", y = "") + theme(axis.text=element_text(size=11))
