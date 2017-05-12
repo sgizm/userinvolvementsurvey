@@ -445,7 +445,7 @@ ggplot(userinf,aes(x=Statement,y=Rating, fill=Rating))+ geom_boxplot(aes(fill = 
 ggplot(infofreq,aes(x=Statement,y=Rating, fill=Rating))+ geom_boxplot(aes(fill = Statement)) + guides(fill=FALSE) + coord_flip() + scale_size_continuous(range = c(0, 70)) + facet_wrap(~data$jobfunction , labeller = as_labeller(jb_names)) +  labs(x = "", y = "") + theme(axis.text=element_text(size=11))
 
 #3.3
-ggplot(understanding, aes(x=Statement,y=Rating, fill=Rating))+ geom_boxplot(aes(fill = Statement)) + guides(fill=FALSE) + coord_flip() + scale_size_continuous(range = c(0, 70)) + facet_wrap(~data$jobfunction , labeller = as_labeller(jb_names)) +  labs(x = "", y = "") + theme(axis.text=element_text(size=11))
+ggplot(understanding, aes(x=Statement,y=Rating, fill=Rating))+ geom_boxplot(aes(fill = Statement)) + guides(fill=FALSE) + coord_flip() + scale_size_continuous(range = c(0, 70)) + facet_wrap(~data$jobfunction , labeller = as_labeller(jb_names)) +  labs(x = "", y = "") + theme(axis.text=element_text(size=11)) + scale_x_discrete(limits=c("..we need to measure user behaviour to decide what the software should be like","..users themselves must be actively involved in shaping the software", "..focused data on a specific user action or behaviour is useful", "..rich, detailed data about what users do is useful", "..data should only be collected when there is a known need or assumption", "..data should always be collected because it might be needed later" ))
 
 #4.1
 ggplot(undernotif, aes(x=Statement,y=Rating, fill=Rating))+ geom_boxplot(aes(fill = Statement)) + guides(fill=FALSE) + coord_flip() + scale_size_continuous(range = c(0, 70)) + facet_wrap(~data$jobfunction , labeller = as_labeller(jb_names)) +  labs(x = "", y = "") #Bu oldu
