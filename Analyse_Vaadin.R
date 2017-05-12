@@ -224,7 +224,7 @@ print("Primary job function")
 summary(jobfunction)
 ggplot(data, aes(x=jobfunction)) +
   geom_bar(fill="#FF9999", colour="white") +
-  labs(x="Job functions", y="Frequency") + theme(axis.text=element_text(size=13))
+  labs(x="Job functions", y="Frequency") + theme(axis.text=element_text(size=13), axis.text.x = element_text(angle = 45, vjust = 1, hjust=1))
 
 data$jobfunction.other
 
@@ -233,7 +233,7 @@ print("Gender")
 summary(gender)
 ggplot(data, aes(x=gender)) +
   geom_bar(fill="white", colour="black") +
-  labs(x="Gender", y="Frequency")
+  labs(x="Gender", y="Frequency") + theme(axis.text=element_text(size=15)) + scale_y_continuous(breaks=c(0, 21), labels = c("0", "21"))
 
 # Age
 print("Age")
@@ -253,7 +253,7 @@ print("How long have you been working in your current role")
 summary(worktime)
 ggplot(data, aes(x=worktime)) +
   geom_histogram(binwidth=12, colour="black", fill="white") +
-  labs(x="Work time", y="Frequency") + scale_x_continuous(breaks=c(4,7,12,24,36,60,120), labels=c("<4m", "7m","1y", "2y","3y","5y", "10y")) + scale_y_continuous(breaks=c(0,1,2,3,4,5,6), labels = c("0", "1", "2", "3", "4", "5", "6"))
+  labs(x="Work time", y="Frequency")  + theme(axis.text=element_text(size=10))+ scale_x_continuous(breaks=c(4,7,12,24,36,60,120), labels=c("<4m", "7m","1y", "2y","3y","5y", "10y")) + scale_y_continuous(breaks=c(0,1,2,3,4,5,6), labels = c("0", "1", "2", "3", "4", "5", "6"))
 
 # Team size
 print("Team size")
