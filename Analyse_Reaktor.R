@@ -1,5 +1,5 @@
 ######################################################################
-# Analysis script for User Involvement Survey - Vaadin
+# Analysis script for User Involvement Survey - Reaktor
 
 ######################################################################
 
@@ -17,39 +17,38 @@ library(reshape2)
 library(scales)
 
 
-POPULATION.SIZE = 135
+POPULATION.SIZE = 397
 CURRENTYEAR <- 1900 + as.POSIXlt(Sys.Date())$year
 
 ######################################################################
 # Read raw data files
 ######################################################################
 
-data <- read.csv("raportti_vaadin.csv")
-# I was going to rbind pilot survey (filled by Pekka) with the final survey csv, but realized that number of columns differ, because we altered the survey after the pilot. Well, I don't rbind them then I think.
-#data_pilot <- read.csv("vaadin_pilot.csv") 
+data <- read.csv("raportti_reaktor.csv")
 data <- data.frame(data)
-#data_pilot <- data.frame(data_pilot)
-#data <- rbind(data1, data_pilot)
+
 ######################################################################
 # Preprocess
 ######################################################################
 
 ###### Demographics #######
 data$jobfunction <- factor(data$X1.1.Which.of.the.following.most.closely.matches.your.primary.job.function..,
-                           levels = c(0:10),
-                           labels = c("Developing Vaadin framework", "Developing Vaadin Pro Tools", "Product management", "Management, other", "UX Design", "Software architecture", "Advocating products and services" ,"Providing consulting", "Providing customer support", "Providing training services", "Sales"))
-#fixing: changed other to sales as both were sales anyways
-data$jobfunction[11] <- "Management, other" #fixing: adding "account manager" to management, others 
+                           levels = c(0:6),
+                           labels = c("Developing software", "Product management", "Business development", "UX design", "Graphic design", "Coaching", "Other"))
+# some fixing required.. new category: data science; and mixed roles e.g., ux + data science
+#data$jobfunction[11] <- "Management, other" #fixing: adding "account manager" to management, others 
 data$jobfunction.other <- data$If.other..please.specify
-data$jobfunction.other[11] <- ""
+#data$jobfunction.other[11] <- ""
 
 # Worktime
 data$worktime <- data$X1.2.How.long.have.you.been.working.in.your.current.company.role.
-data$worktime[7] <- NA #fixing
+#fixings: 9999 to: 132 for a better histogram 
+data$worktime[c(9, 12, 24, 30, 40, 64)] <- 132 
+
 #[15:58, 1/26/2017] Fabian Fagerholm: and the scale will draw better                        
 #[15:59, 1/26/2017] Fabian Fagerholm: but we have to remember that when reporting
 
-data$gender <- factor(data$X1.4.Which.of.the.following.best.describes.you..,
+data$gender <- factor(data$X1.3.Which.of.the.following.best.describes.you..,
                       levels = c("F", "M", "NA"),
                       labels = c("Female", "Male", "Other / prefer not to say"))
 
@@ -64,8 +63,8 @@ data$teamsize <- factor(data$X1.5.How.many.people.do.you.work.with.on.a.regular.
                         labels = c("< 3", "3-5", "6-10", "11-20", ">20"))
 # Work location
 data$location <- factor(data$X1.6.Where.is.your.primary.work.location..,
-                       levels = c(0:2),
-                       labels = c("Finland", "Germany", "USA"))
+                        levels = c(0:2),
+                        labels = c("Finland", "Germany", "USA"))
 
 # End user
 data$end_user <- factor(data$X1.7.Who.do.you.consider.as.your.primary.user.in.your.job.function..,
@@ -224,7 +223,7 @@ print("Primary job function")
 summary(jobfunction)
 ggplot(data, aes(x=jobfunction)) +
   geom_bar(fill="#FF9999", colour="white") +
-  labs(x="Job functions", y="Frequency") + theme(axis.text=element_text(size=13), axis.text.x = element_text(angle = 45, vjust = 1, hjust=1))
+  labs(x="Job functions", y="Frequency") + theme(axis.text=element_text(size=13), axis.text.x = element_text(angle = 45, vjust = 1, hjust=1)) + scale_y_continuous(breaks=c(0, 2, 3, 12, 43), labels = c("0", "2", "3", "12", "43"))
 
 data$jobfunction.other
 
@@ -233,7 +232,7 @@ print("Gender")
 summary(gender)
 ggplot(data, aes(x=gender)) +
   geom_bar(fill="white", colour="black") +
-  labs(x="Gender", y="Frequency") + theme(axis.text=element_text(size=15)) + scale_y_continuous(breaks=c(0, 21), labels = c("0", "21"))
+  labs(x="Gender", y="Frequency") + theme(axis.text=element_text(size=15)) + scale_y_continuous(breaks=c(0, 3, 6, 57), labels = c("0", "3", "6", "57"))
 
 # Age
 print("Age")
@@ -253,7 +252,7 @@ print("How long have you been working in your current role")
 summary(worktime)
 ggplot(data, aes(x=worktime)) +
   geom_histogram(binwidth=12, colour="black", fill="white") +
-  labs(x="Work time", y="Frequency")  + theme(axis.text=element_text(size=10))+ scale_x_continuous(breaks=c(4,7,12,24,36,60,120), labels=c("<4m", "7m","1y", "2y","3y","5y", "10y")) + scale_y_continuous(breaks=c(0,1,2,3,4,5,6), labels = c("0", "1", "2", "3", "4", "5", "6"))
+  labs(x="Work time", y="Frequency")  + theme(axis.text=element_text(size=10))+ scale_x_continuous(breaks=c(1, 12, 24, 36, 48, 60, 72, 96, 108, 120, 132), labels=c("<1y", "1y", "2y","3y", "4y", "5y","6y", "8y", "9y", "10y", ">10y")) + scale_y_continuous(breaks=c(0,1,4,5,6,7,8,9), labels = c("0", "1", "4", "5", "6","7", "8", "9"))
 
 # Team size
 print("Team size")
