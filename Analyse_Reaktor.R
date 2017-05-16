@@ -24,7 +24,7 @@ CURRENTYEAR <- 1900 + as.POSIXlt(Sys.Date())$year
 # Read raw data files
 ######################################################################
 
-data <- read.csv("raportti_reaktor.csv")
+data <- read.csv("raportti_reaktor.csv", encoding = "UTF-8")
 data <- data.frame(data)
 
 ######################################################################
@@ -52,19 +52,22 @@ data$gender <- factor(data$X1.3.Which.of.the.following.best.describes.you..,
                       levels = c("F", "M", "NA"),
                       labels = c("Female", "Male", "Other / prefer not to say"))
 
-# Age
-data$birthyear <- data$X1.3.What.is.your.year.of.birth.
-data$birthyear[5] <- data$birthyear[5] + 1900 # Fix data entry error
-data$age <- CURRENTYEAR - data$birthyear
+# Age range
+data$age_range <- factor(data$X1.4.What.is.your.age.range..,
+                         levels = c(0:4),
+                         labels = c("20 or less", "21-30", "31-40", "41-50", "50 or more"))
 
-#Teams ize
+#Team size
 data$teamsize <- factor(data$X1.5.How.many.people.do.you.work.with.on.a.regular.basis.in.the.company..,
                         levels = c(0:4),
                         labels = c("< 3", "3-5", "6-10", "11-20", ">20"))
 # Work location
-data$location <- factor(data$X1.6.Where.is.your.primary.work.location..,
-                        levels = c(0:2),
-                        labels = c("Finland", "Germany", "USA"))
+data$location <- factor(data$X1.6.Where.is.your.primary.office.located..,
+                        levels = c(0:4),
+                        labels = c("Helsinki", "Seinäjoki", "New York", "Tokyo", "Amsterdam"))
+
+#### CHAR PROBLEM!
+
 
 # End user
 data$end_user <- factor(data$X1.7.Who.do.you.consider.as.your.primary.user.in.your.job.function..,
@@ -234,18 +237,12 @@ ggplot(data, aes(x=gender)) +
   geom_bar(fill="white", colour="black") +
   labs(x="Gender", y="Frequency") + theme(axis.text=element_text(size=15)) + scale_y_continuous(breaks=c(0, 3, 6, 57), labels = c("0", "3", "6", "57"))
 
-# Age
-print("Age")
-summary(age)
-ggplot(data, aes(x=age)) +
-  geom_density(fill="#FF9999", colour="#FF9999") +
-  labs(x="Age", y="Density")
-
-ggplot(data, aes(x=age)) + 
-  geom_histogram(aes(y=..density..),# Histogram with density instead of count on y-axis
-                 binwidth=.5,
-                 colour="black", fill="white") +
-  geom_density(alpha=.2, fill="#FF9999", colour="#FF9999")  # Overlay with transparent density plot
+# Age range
+print("Age range")
+summary(age_range)
+ggplot(data, aes(x=age_range)) +
+  geom_bar(fill="lightgoldenrod2", colour="white") +
+  labs(x="Age range", y="Frequency") + scale_y_continuous(breaks=c(0, 14, 16, 36), labels = c("0", "14", "16", "36"))
 
 # Work time
 print("How long have you been working in your current role")
@@ -259,7 +256,7 @@ print("Team size")
 summary(teamsize)
 ggplot(data, aes(x=teamsize)) +
   geom_bar(fill="lightgoldenrod2", colour="white") +
-  labs(x="Team size", y="Frequency") + theme(axis.text=element_text(size=13)) + scale_y_continuous(breaks=c(0,2,3,5,8), labels = c("0", "2", "3", "5", "8"))
+  labs(x="Team size", y="Frequency") + theme(axis.text=element_text(size=13)) + scale_y_continuous(breaks=c(0,3,6,10,20,27), labels = c("0", "3", "6", "10", "20","27"))
 
 # Work location
 print("Work location")
