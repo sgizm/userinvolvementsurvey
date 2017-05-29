@@ -84,7 +84,7 @@ userinv.statements <- c(
   "I know who uses the software I contribute to in my work",
   "I need to ask for permission to contact users",
   "I frequently have direct contact with users",
-  "I have sufficient information about users’ needs",
+  "I have sufficient information about users??? needs",
   "I have information about users that is relevant for my work",
   "The information I have about users is up to date",
   "I would like to get more feedback from users"

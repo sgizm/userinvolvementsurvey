@@ -15,6 +15,7 @@ library(Hmisc)
 library(corrplot)
 library(reshape2)
 library(scales)
+library(readr)
 
 
 POPULATION.SIZE = 397
@@ -64,39 +65,37 @@ data$teamsize <- factor(data$X1.5.How.many.people.do.you.work.with.on.a.regular.
 # Work location
 data$location <- factor(data$X1.6.Where.is.your.primary.office.located..,
                         levels = c(0:4),
-                        labels = c("Helsinki", "Seinäjoki", "New York", "Tokyo", "Amsterdam"))
-
+                        labels = c("Helsinki", "SeinÃ¤joki", "New York", "Tokyo", "Amsterdam"))
 #### CHAR PROBLEM!
 
 
 # End user
-data$end_user <- factor(data$X1.7.Who.do.you.consider.as.your.primary.user.in.your.job.function..,
+data$end_user <- factor(data$X1.7.Which.one.do.you.consider.to.be.the.current.primary.project.you.work.in..,
                         levels = c(0:1),
-                        labels = c("Software developer using Vaadin products", "End user using applications developed with Vaadin tools or frameworks"))
+                        labels = c("Internal project", "Customer project"))
+
+data$end_user_open <- data$If.customer.project..please.provide.the.name.of.the.customer.s....The.answers.are.confidential..
 
 # 2.1 In which development activities are users involved in your company? (click all that apply)
 data$useractivities.forming.ideas <- data$Forming.product.or.service.ideas
 data$useractivities.gathering.requirements <- data$Gathering.requirements
-data$useractivities.software.design <- data$Software.design
+data$useractivities.ui.design <- data$UI.design
+data$useractivities.tech.design <- data$Technical.design
 data$useractivities.implementation <- data$Implementation
 data$useractivities.testing <- data$Testing
 data$useractivities.after.release <- data$The.activities.after.release
-data$useractivities.commiting.code <- data$Committing.code
-data$useractivities.fixes <- data$Providing.fixes
-data$useractivities.submitting.bugs <- data$Submitting.bugs
-data$useractivities.online.discussion <- data$Participating.in.online.discussion
 data$useractivities.other <- data$Other
-data$useractivities.other.open <- data$If.other..please.specify..separate.with.commas.
-useractivities.options <- c("Forming ideas", "Gathering requirements", "Software design", "Implementing software", "Testing", "The activities after release", "Committing code", "Providing fixes", "Submitting bugs", "Participating in online discussion", "Other")
+data$useractivities.other.open <- data$If.other..please.specify
+useractivities.options <- c("Forming ideas", "Gathering requirements", "UI design", "Technical design", "Implementation", "Testing", "The activities after release", "Other")
 
-#Other roles
-data$useractivities.other <- data$If.other..please.specify
+#Other activities
+data$useractivities.other <- data$If.other..please.specify.1
 
 # 2.2. How much do you agree with the following statements? (User involvement statements)
 data$userinv.S1 <- data$X2.2..How.much.do.you.agree.with.the.following.statements...I.know.who.uses.the.software.I.contribute.to.in.my.work
 data$userinv.S2 <- data$X2.2..How.much.do.you.agree.with.the.following.statements...I.need.to.ask.for.permission.to.contact.users
 data$userinv.S3 <- data$X2.2..How.much.do.you.agree.with.the.following.statements...I.frequently.have.direct.contact.with.users
-data$userinv.S4 <- data$X2.2..How.much.do.you.agree.with.the.following.statements...I.have.sufficient.information.about.users....needs
+data$userinv.S4 <- data$X2.2..How.much.do.you.agree.with.the.following.statements...I.have.sufficient.information.about.users.U.2019..needs
 data$userinv.S5 <- data$X2.2..How.much.do.you.agree.with.the.following.statements...I.have.information.about.users.that.is.relevant.for.my.work
 data$userinv.S6 <- data$X2.2..How.much.do.you.agree.with.the.following.statements...The.information.I.have.about.users.is.up.to.date
 data$userinv.S7 <- data$X2.2..How.much.do.you.agree.with.the.following.statements...I.would.like.to.get.more.feedback.from.users
@@ -113,18 +112,14 @@ userinv.statements <- c(
 userinv.options <- c("Completely disagree", "Disagree", "Neither disagree or agree", "Agree", "Completely agree", "I don't know")
 
 # 2.3 In your experience, how easy is it for the following to get information from users?
-data$userinf.pro.mng <- data$X2.3.In.your.experience..how.easy.is.it.for.the.following.roles.to.get.information.from.users...Product.managers
-data$userinf.mng <- data$X2.3.In.your.experience..how.easy.is.it.for.the.following.roles.to.get.information.from.users...Managers..other
-data$userinf.ux.designer <- data$X2.3.In.your.experience..how.easy.is.it.for.the.following.roles.to.get.information.from.users...UX.designers
-data$userinf.dev.frame <- data$X2.3.In.your.experience..how.easy.is.it.for.the.following.roles.to.get.information.from.users...Vaadin.Framework.developers
-data$userinf.dev.tool <- data$X2.3.In.your.experience..how.easy.is.it.for.the.following.roles.to.get.information.from.users...Vaadin.Pro.Tools.developers
-data$userinf.arc <- data$X2.3.In.your.experience..how.easy.is.it.for.the.following.roles.to.get.information.from.users...Software.architects.
-data$userinf.adv <- data$X2.3.In.your.experience..how.easy.is.it.for.the.following.roles.to.get.information.from.users...Product.and.service.advocates
-data$userinf.con <- data$X2.3.In.your.experience..how.easy.is.it.for.the.following.roles.to.get.information.from.users...Consultants
-data$userinf.cust.sup <- data$X2.3.In.your.experience..how.easy.is.it.for.the.following.roles.to.get.information.from.users...Customer.support
-data$userinf.tra <- data$X2.3.In.your.experience..how.easy.is.it.for.the.following.roles.to.get.information.from.users...Trainers
-data$userinf.slf <- data$X2.3.In.your.experience..how.easy.is.it.for.the.following.roles.to.get.information.from.users...Myself
-userinf.statements <- c("Product managers", "Managers, other", "UX designers", "Vaadin Framework developers", "Vaadin Pro Tools developers", "Software architects", "Product and service advocates", "Consultants", "Customer support", "Trainers", "Myself")
+data$userinf.dev <- data$X2.3.In.your.experience..how.easy.is.it.for.the.following.roles.to.get.information.from.users..Please.consider.the.roles.in.your.company.context...Developers
+data$userinf.mng <- data$X2.3.In.your.experience..how.easy.is.it.for.the.following.roles.to.get.information.from.users..Please.consider.the.roles.in.your.company.context...Managers
+data$userinf.bis.dev <- data$X2.3.In.your.experience..how.easy.is.it.for.the.following.roles.to.get.information.from.users..Please.consider.the.roles.in.your.company.context...Business.developers
+data$userinf.ux.designer <- data$X2.3.In.your.experience..how.easy.is.it.for.the.following.roles.to.get.information.from.users..Please.consider.the.roles.in.your.company.context...UX.designers
+data$userinf.graph.designer <- data$X2.3.In.your.experience..how.easy.is.it.for.the.following.roles.to.get.information.from.users..Please.consider.the.roles.in.your.company.context...Graphic.designers
+data$userinf.coach <- data$X2.3.In.your.experience..how.easy.is.it.for.the.following.roles.to.get.information.from.users..Please.consider.the.roles.in.your.company.context...Coaches
+data$userinf.slf <- data$X2.3.In.your.experience..how.easy.is.it.for.the.following.roles.to.get.information.from.users..Please.consider.the.roles.in.your.company.context...Myself
+userinf.statements <- c("Developers", "Managers", "Business developers", "UX designers", "Graphical designers", "Coaches", "Myself")
 userinf.options <- c("Very difficult", "Difficult", "Neither easy nor difficult", "Easy", "Very easy", "I don't know")
 
 # 2.4 How often do you use the following ways to get information about users?
@@ -193,19 +188,19 @@ usernotif.options <- c("Completely disagree", "Disagree", "Neither disagree or a
 # 4.2 How much do you agree with the following statements about involving users in experiments? Please answer according to your personal beliefs.
 data$expinv.S1 <- data$X4.2.How.much.do.you.agree.with.the.following.statements.about.involving.users.in.experiments..Please.answer.according.to.your.personal.beliefs...I.cannot.trust.that.the.results.will.be.correct
 data$expinv.S2 <- data$X4.2.How.much.do.you.agree.with.the.following.statements.about.involving.users.in.experiments..Please.answer.according.to.your.personal.beliefs...Involving.users.in.experiments.is.time.consuming
-data$expinv.S3 <- data$X4.2.How.much.do.you.agree.with.the.following.statements.about.involving.users.in.experiments..Please.answer.according.to.your.personal.beliefs...Our.company.does.not.have.the.needed.technical.infrastructure
+data$expinv.S3 <- data$X4.2.How.much.do.you.agree.with.the.following.statements.about.involving.users.in.experiments..Please.answer.according.to.your.personal.beliefs...My.customer.does.not.have.the.needed.technical.infrastructure
 data$expinv.S4 <- data$X4.2.How.much.do.you.agree.with.the.following.statements.about.involving.users.in.experiments..Please.answer.according.to.your.personal.beliefs...Users.would.not.like.to.be.part.of.software.experiments
 data$expinv.S5 <- data$X4.2.How.much.do.you.agree.with.the.following.statements.about.involving.users.in.experiments..Please.answer.according.to.your.personal.beliefs...Users.have.to.be.convinced.of.the.benefit.before.taking.part
 data$expinv.S6 <- data$X4.2.How.much.do.you.agree.with.the.following.statements.about.involving.users.in.experiments..Please.answer.according.to.your.personal.beliefs...Experiments.give.users.false.expectations
-data$expinv.S7 <- data$X4.2.How.much.do.you.agree.with.the.following.statements.about.involving.users.in.experiments..Please.answer.according.to.your.personal.beliefs...Experiments.reveal.secrets.about.the.product.strategy
+data$expinv.S7 <- data$X4.2.How.much.do.you.agree.with.the.following.statements.about.involving.users.in.experiments..Please.answer.according.to.your.personal.beliefs...Experiments.reveal.secrets.about.my.customer.s.product.strategy
 expinv.statements <- c(
   "I cannot trust that the experiment results will be correct",
   "Involving users in experiments is time-consuming",
-  "Our company does not have the needed technical infrastructure",
+  "My customer does not have the needed technical infrastructure",
   "Users would not like to be part of software experiments",
   "Users have to be convinced of the benefit before taking part",
   "Experiments give users false expectations",
-  "Experiments reveal secrets about the product strategy")
+  "Experiments reveal secrets about my customer's strategy")
 expinv.options <- c("Completely disagree", "Disagree", "Neither disagree or agree", "Agree", "Completely agree", "I don't know")
 
 
@@ -270,38 +265,35 @@ print("End user")
 summary(end_user)
 ggplot(data, aes(x=end_user)) +
   geom_bar(fill="cadetblue2", colour="white") +
-  labs(x="End user", y="Frequency") + theme(axis.text=element_text(size=13)) + scale_y_continuous(breaks=c(0,5,7,10,14), labels = c("0", "5", "7", "10", "14"))
+  labs(x="End user", y="Frequency") + theme(axis.text=element_text(size=13)) + scale_y_continuous(breaks=c(0,6,60), labels = c("0", "6", "60"))
+
+summary(end_user_open)
+##BE BACK HERE! Na'a could be the problem
 
 # 2.1 In which development activities are users involved in your company? (click all that apply)
 useractivities.forming.ideas <- sum(data$useractivities.forming.ideas, na.rm=TRUE)
-useractivities.designing.software <- sum(data$useractivities.gathering.requirements, na.rm=TRUE)
-useractivities.software.design <- sum(data$useractivities.software.design, na.rm=TRUE)
+useractivities.gathering.requirements <- sum(data$useractivities.gathering.requirements, na.rm=TRUE)
+useractivities.ui.design <- sum(data$useractivities.ui.design, na.rm=TRUE)
+useractivities.tech.design <- sum(data$useractivities.tech.design, na.rm=TRUE)
 useractivities.implementation <- sum(data$useractivities.implementation, na.rm=TRUE)
 useractivities.testing <- sum(data$useractivities.testing, na.rm=TRUE)
 useractivities.after.release <- sum(data$useractivities.after.release, na.rm=TRUE)
-useractivities.commiting.code <- sum(data$useractivities.commiting.code, na.rm=TRUE)
-useractivities.providing.fixes <- sum(data$useractivities.providing.fixes, na.rm=TRUE)
-useractivities.submitting.bugs <- sum(data$useractivities.submitting.bugs, na.rm=TRUE)
-useractivities.online.discussion<- sum(data$useractivities.online.discussion, na.rm=TRUE)
 useractivities.other <- sum(data$useractivities.other, na.rm=TRUE)
 useractivities <- data.frame(Activity=useractivities.options,
                              Frequency=c(
                                useractivities.forming.ideas,
-                               useractivities.designing.software,
-                               useractivities.software.design,
+                               useractivities.gathering.requirements,
+                               useractivities.ui.design,
+                               useractivities.tech.design,
                                useractivities.implementation,
                                useractivities.testing,
                                useractivities.after.release,
-                               useractivities.commiting.code,
-                               useractivities.providing.fixes,
-                               useractivities.submitting.bugs,
-                               useractivities.online.discussion,
                                useractivities.other))
 
 print("Frequencies of development activities that users are involved in")
 summary(useractivities)
 ggplot(data=useractivities, aes(x=Activity, y=Frequency)) +
-  geom_bar(stat="identity", fill="plum4", colour="black") + theme(axis.text=element_text(size=14), axis.text.x = element_text(angle = 45, vjust = 1, hjust=1))+ scale_x_discrete(limits=c("Forming ideas","Gathering requirements","Software design", "Implementing software", "Testing", "The activities after release", "Committing code", "Providing fixes", "Submitting bugs", "Participating in online discussion", "Other")) + scale_y_continuous(breaks=c(0,3,5,8,9,12,13,16,17), labels = c("0", "3", "5", "8", "9", "12", "13", "16", "17"))
+  geom_bar(stat="identity", fill="plum4", colour="black") + theme(axis.text=element_text(size=14), axis.text.x = element_text(angle = 45, vjust = 1, hjust=1))+ scale_x_discrete(limits=c("Forming ideas","Gathering requirements","UI design", "Technical design", "Implementation", "Testing", "The activities after release", "Other")) + scale_y_continuous(breaks=c(0,5,24,27,46,48,50,53), labels = c("0", "5", "24", "27", "46", "48", "50", "53"))
 
 
 # 2.2 How much do you agree with the following statements?
@@ -321,16 +313,12 @@ ggplot(data=userinv, aes(x=Statement, y=Rating, fill=Statement)) +
 # 2.3 In your experience, how easy is it for the following to get information from users?
 userinf <- data.frame(Statement=factor(rep(userinf.statements, each=length(userinf.pro.mng))),
                       Rating=c(
-                        userinf.pro.mng,
+                        userinf.dev,
                         userinf.mng,
+                        userinf.bis.dev,
                         userinf.ux.designer,
-                        userinf.dev.frame,
-                        userinf.dev.tool,
-                        userinf.arc,
-                        userinf.adv,
-                        userinf.con,
-                        userinf.cust.sup,
-                        userinf.tra,
+                        userinf.graph.designer,
+                        userinf.coach,
                         userinf.slf))
 ggplot(data=userinf, aes(x=Statement, y=Rating, fill=Statement)) +
   geom_boxplot() + guides(fill=FALSE) + coord_flip() + scale_x_discrete(limits=c("Myself", "Trainers", "Customer support", "Consultants", "Product and service advocates", "Software architects", "Vaadin Pro Tools developers", "Vaadin Framework developers", "UX designers", "Managers, other", "Product managers")) + theme(axis.text=element_text(size=16))
@@ -381,7 +369,7 @@ undernotif <- data.frame(Statement=factor(rep(usernotif.statements, each=length(
                            usernotif.S6,
                            usernotif.S7))
 ggplot(data=undernotif, aes(x=Statement, y=Rating, fill=Statement)) +
-  geom_boxplot() + guides(fill=FALSE) + coord_flip() + theme(axis.text=element_text(size=11))
+  geom_boxplot() + guides(fill=FALSE) + coord_flip() + theme(axis.text=element_text(size=11)) + ggtitle("Reaktor")
 
 # 4.2 How much do you agree with the following statements about involving users in experiments? Please answer according to your personal beliefs.
 expinv <- data.frame(Statement=factor(rep(expinv.statements, each=length(expinv.S1))),
@@ -401,15 +389,13 @@ ggplot(data=expinv, aes(x=Statement, y=Rating, fill=Statement)) +
 ####CROSS_ANALYSIS###
 
 jb_names <- c(
-  'Developing Vaadin framework' = "Framework developers",
-  'Developing Vaadin Pro Tools' = "Pro tools developers",
+  'Developing software' = "Developers",
   'Product management' =  'Product managers',
-  'Management, other' = "Managers, other",
-  'UX Design' = "UX designers",
-  'Advocating products and services' = "Advocates",
-  'Providing consulting' = "Consultants",
-  'Providing customer support' = "Customer support",
-  "Sales" = "Sales"
+  'Business development' = "Business developers",
+  'UX design' = "UX designers",
+  'Graphic design' = "Graphic designers",
+  "Coaching" = "Coaches",
+  "Other" = "Other"
 )
 
 #2.1 - useractivities over end-user types 
@@ -441,10 +427,10 @@ ggplot(userinf,aes(x=Statement,y=Rating, fill=Rating))+ geom_boxplot(aes(fill = 
 ggplot(infofreq,aes(x=Statement,y=Rating, fill=Rating))+ geom_boxplot(aes(fill = Statement)) + guides(fill=FALSE) + coord_flip() + scale_size_continuous(range = c(0, 70)) + facet_wrap(~data$jobfunction , labeller = as_labeller(jb_names)) +  labs(x = "", y = "") + theme(axis.text=element_text(size=11))
 
 #3.3
-ggplot(understanding, aes(x=Statement,y=Rating, fill=Rating))+ geom_boxplot(aes(fill = Statement)) + guides(fill=FALSE) + coord_flip() + scale_size_continuous(range = c(0, 70)) + facet_wrap(~data$jobfunction , labeller = as_labeller(jb_names)) +  labs(x = "", y = "") + theme(axis.text=element_text(size=11)) + scale_x_discrete(limits=c("..we need to measure user behaviour to decide what the software should be like","..users themselves must be actively involved in shaping the software", "..focused data on a specific user action or behaviour is useful", "..rich, detailed data about what users do is useful", "..data should only be collected when there is a known need or assumption", "..data should always be collected because it might be needed later" ))
+ggplot(understanding, aes(x=Statement,y=Rating, fill=Rating))+ geom_boxplot(aes(fill = Statement)) + guides(fill=FALSE) + coord_flip() + scale_size_continuous(range = c(0, 70)) + facet_wrap(~data$jobfunction , labeller = as_labeller(jb_names)) +  labs(x = "", y = "") + theme(axis.text=element_text(size=11)) + scale_x_discrete(limits=c("..we need to measure user behaviour to decide what the software should be like","..users themselves must be actively involved in shaping the software", "..focused data on a specific user action or behaviour is useful", "..rich, detailed data about what users do is useful", "..data should only be collected when there is a known need or assumption", "..data should always be collected because it might be needed later" )) + ggtitle("Reaktor")
 
 #4.1
-ggplot(undernotif, aes(x=Statement,y=Rating, fill=Rating))+ geom_boxplot(aes(fill = Statement)) + guides(fill=FALSE) + coord_flip() + scale_size_continuous(range = c(0, 70)) + facet_wrap(~data$jobfunction , labeller = as_labeller(jb_names)) +  labs(x = "", y = "") #Bu oldu
+ggplot(undernotif, aes(x=Statement,y=Rating, fill=Rating))+ geom_boxplot(aes(fill = Statement)) + guides(fill=FALSE) + coord_flip() + scale_size_continuous(range = c(0, 70)) + facet_wrap(~data$jobfunction , labeller = as_labeller(jb_names)) +  labs(x = "", y = "") + ggtitle("Reaktor")
 
 #4.2
-ggplot(expinv, aes(x=Statement,y=Rating))+ geom_boxplot(aes(fill = Statement)) + guides(fill=FALSE) + coord_flip() + scale_size_continuous(range = c(0, 70)) + facet_wrap(~data$jobfunction, labeller = as_labeller(jb_names)) +  labs(x = "", y = "") + theme(axis.text=element_text(size=11))
+ggplot(expinv, aes(x=Statement,y=Rating))+ geom_boxplot(aes(fill = Statement)) + guides(fill=FALSE) + coord_flip() + scale_size_continuous(range = c(0, 70)) + facet_wrap(~data$jobfunction, labeller = as_labeller(jb_names)) +  labs(x = "", y = "") + theme(axis.text=element_text(size=11)) + ggtitle("Reaktor")
