@@ -36,10 +36,11 @@ data <- data.frame(data)
 data$jobfunction <- factor(data$X1.1.Which.of.the.following.most.closely.matches.your.primary.job.function..,
                            levels = c(0:6),
                            labels = c("Developing software", "Product management", "Business development", "UX design", "Graphic design", "Coaching", "Other"))
-# some fixing required.. new category: data science; and mixed roles e.g., ux + data science
-#data$jobfunction[11] <- "Management, other" #fixing: adding "account manager" to management, others 
+data$jobfunction[48]
 data$jobfunction.other <- data$If.other..please.specify
-#data$jobfunction.other[11] <- ""
+data$jobfunction.other[45] <- "" #fixing: This person already marked UX design, but also put in other "UI design". no need for the second one
+data$jobfunction.other[48] <- "" #fixing: UX, graphic design to UX design
+data$jobfunction[48] <- "UX design"
 
 # Worktime
 data$worktime <- data$X1.2.How.long.have.you.been.working.in.your.current.company.role.
