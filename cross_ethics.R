@@ -206,8 +206,8 @@ data3$jobfunction3 <- factor(data3$X1.1.Which.of.the.following.most.closely.matc
                            labels = c("Developers", "Developers", "Managers", "Managers", "UX designers", "Developers", "Other" ,"Other", "Other", "Other", "Other"))
 #fixing: changed other to sales as both were sales anyways
 data3$jobfunction3[11] <- "Managers" #fixing: adding "account manager" to management, others 
-data$jobfunction.other <- data$If.other..please.specify
-data$jobfunction.other[11] <- ""
+data3$jobfunction3.other <- data3$If.other..please.specify
+data3$jobfunction3.other[11] <- ""
 attach(data3)
 # Job function
 print("Primary job function")
@@ -390,4 +390,20 @@ ggplot(data=total_expinv, aes(x=Statement, y=Rating, fill=Statement)) +
   geom_boxplot() + guides(fill=FALSE) + coord_flip() + theme(axis.text=element_text(size=11)) + ggtitle("Total") + scale_x_discrete(limits=c("Experiments reveal secrets about my customer's strategy", "Experiments give users false expectations", "Users have to be convinced of the benefit before taking part", "Users would not like to be part of software experiments", "My customer does not have the needed technical infrastructure", "Involving users in experiments is time-consuming", "I cannot trust that the experiment results will be correct"))
 #Total versus roles:
 ggplot(yy, aes(x=Statement,y=Rating, fill=Rating))+ geom_boxplot(aes(fill = Statement)) + guides(fill=FALSE) + coord_flip() + ggtitle("Total") + scale_size_continuous(range = c(0, 70)) + facet_wrap(~yy$Jobf) +  labs(x = "", y = "") + scale_x_discrete(limits=c("Experiments reveal secrets about my customer's strategy", "Experiments give users false expectations", "Users have to be convinced of the benefit before taking part", "Users would not like to be part of software experiments", "My customer does not have the needed technical infrastructure", "Involving users in experiments is time-consuming", "I cannot trust that the experiment results will be correct"))
+
+
+
+### CLUSTERIN_ ###
+cols4 <- c(1,3,4,5,6,50:63, 75:90)
+cols3 <- c(1,3,4,5,7,56:69, 70:85)
+cols2 <- c(1,3,4,5,6,53:66, 79:94)
+cols1 <- c(1,3,4,5,7,42:55, 56:71)
+
+
+a <- data4[,cols4]
+b <- data3[,cols3]
+c <- data2[,cols2]
+d <- data1[,cols1]
+
+clus <- mapply(c, a, b, c, d) 
 
