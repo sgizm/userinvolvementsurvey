@@ -9,10 +9,12 @@
 
 library(foreign)
 library(ggplot2)
+library(GGally)
 library(data.table)
 library(gmodels)
 library(Hmisc)
 library(corrplot)
+library(magrittr)
 library(reshape2)
 library(scales)
 library(readr)
@@ -291,7 +293,7 @@ data4$jobfunction4 <- factor(data4$X1.1.Which.of.the.following.most.closely.matc
                            levels = c(0:6),
                            labels = c("Developers", "Managers", "Managers", "UX designers", "UX designers", "Other", "Other"))
 data4$jobfunction4[48]
-data4$jobfunction4.other <- data$If.other..please.specify
+data4$jobfunction4.other <- data4$If.other..please.specify
 data4$jobfunction4.other[45] <- "" #fixing: This person already marked UX design, but also put in other "UI design". no need for the second one
 data4$jobfunction4.other[48] <- "" #fixing: UX, graphic design to UX design
 data4$jobfunction4[48] <- "UX designers"
@@ -302,7 +304,7 @@ ggplot(data4, aes(x=jobfunction4)) +
   geom_bar(fill="#FF9999", colour="white") +
   labs(x="Job functions", y="Frequency") + theme(axis.text=element_text(size=13), axis.text.x = element_text(angle = 45, vjust = 1, hjust=1)) + scale_y_continuous(breaks=c(0, 2, 3, 12, 43), labels = c("0", "2", "3", "12", "43"))
 
-data$jobfunction.other
+#data$jobfunction.other
 # 4.1 How much do you agree with the following statements regarding notifying users about experiments? Please answer according to your personal beliefs.
 data4$usernotif.S1 <- data4$X4.1.How.much.do.you.agree.with.the.following.statements.regarding.notifying.users.about.experiments..Please.answer.according.to.your.personal.beliefs...Users.do.not.need.to.know.they.are.involved
 data4$usernotif.S2 <- data4$X4.1.How.much.do.you.agree.with.the.following.statements.regarding.notifying.users.about.experiments..Please.answer.according.to.your.personal.beliefs...If.we.collect.personal.information..users.need.to.be.notified
@@ -394,16 +396,111 @@ ggplot(yy, aes(x=Statement,y=Rating, fill=Rating))+ geom_boxplot(aes(fill = Stat
 
 
 ### CLUSTERIN_ ###
-cols4 <- c(1,3,4,5,6,50:63, 75:90)
-cols3 <- c(1,3,4,5,7,56:69, 70:85)
-cols2 <- c(1,3,4,5,6,53:66, 79:94)
-cols1 <- c(1,3,4,5,7,42:55, 56:71)
+cols4 <- c(1,3,5,6,50:63, 75:90)
+cols3 <- c(1,3,5,7,56:69, 70:85)
+cols2 <- c(1,3,5,6,53:66, 79:94)
+cols1 <- c(1,3,5,7,42:55, 56:71)
 
 
-a <- data4[,cols4]
-b <- data3[,cols3]
-c <- data2[,cols2]
-d <- data1[,cols1]
+a <- data4[,cols4, as.numeric()]
+#data.frame(a)
+a[,35] <- 4
+#cbind(company = "A", a) did not work
+b <- data3[,cols3, as.numeric()]
+b[,35] <- 3
+c <- data2[,cols2, as.numeric()]
+c[,35] <- 2
+d <- data1[,cols1, as.numeric()]
+d[,35] <- 1
 
 clus <- mapply(c, a, b, c, d) 
+colss <- c(3:19, 35)
+clus_sub <- clus[,colss]  
+#clus_sub <- data.frame(clus_sub) #otherwise cor function does not accept
+colnames(clus_sub) <- c("time", "job1", "E1.1","E1.2","E1.3","E1.4","E1.5","E1.6","E1.7","E2.1","E2.2","E2.3","E2.4","E2.5","E2.6","E2.7","job2","company")
+str(clus_sub)
+dim(clus_sub) 
+levels(clus_sub[,1]) <- c(levels(clus_sub[,1]), 132) #working time 9999 changed to 132
+clus_sub[,1][clus_sub[,1]==9999] <- 132 #working time 9999 changed to 132
+class(clus_sub)
+pairs(clus_sub)
+
+#data.matrix(clus_sub)
+## few correlations
+# calculate the correlation matrix and round it
+cor_matrix <- cor(clus_sub, use="pairwise.complete.obs") 
+# print the correlation matrix
+cor_matrix %>% round(2)
+data.frame(cor_matrix)
+corrplot(cor_matrix, method="circle", type = "upper", cl.pos = "b", tl.pos = "d", tl.cex = 0.6)
+# tl.cex = 0.9, addCoef.col="black" can be adeed in carrplot for the numbers
+
+## below is some attempt towards LDA - however wont work as no train set 
+# center and standardize variables
+sub_scaled <- scale(clus_sub)
+# summaries of the scaled variables
+summary(sub_scaled)
+class(sub_scaled)
+# change the object to data frame
+sub_scaled <- as.data.frame(sub_scaled)
+ggpairs(sub_scaled, lower = list(combo = wrap("facethist", bins = 20))) +
+  ggtitle("All scaled variables against each other") +
+  theme(plot.title = element_text(hjust = 0.5,size=20,face='bold'))
+# save the scaled company as scaled_company
+scaled_company <- sub_scaled$company
+# summary of the scaled_crim
+summary(scaled_company)
+# create a quantile vector of company and print it
+#bins <- quantile(scaled_company) ## No, quantiling won't work here.. 
+#bins
+# create a categorical variable 'company'
+company <- cut(scaled_company, breaks = c(-1.485, -0.706, 0.0718, 0.8503), include.lowest = TRUE, labels=c("A", "B", "C"))
+# look at the table of the new factor comnpany
+table(company)
+# remove original company from the dataset
+clus_scaled <- dplyr::select(clus_scaled, -company)
+
+
+#below is attempt to K-means 
+# Euclidean distance matrix
+dist_sub <- dist(clus_sub)
+# k-means clustering
+km <-kmeans(dist_sub, centers = 4)
+# plot the dataset with clusters
+pairs(clus_sub, col = km$cluster)
+
+
+
+
+n.factors <- 4
+## factanal below does not work because of NA's
+fit <- factanal(clus_sub, 
+                covmat=cor_matrix,
+                n.obs=4,
+                n.factors,
+                rotation="varimax")
+
+# scores=c("regression") add this for the scores
+print(fit, digits=2, cutoff=.3, sort=TRUE)
+
+summary(fit)
+plot(fit,type="lines") # scree plot 
+biplot(fit) # does not work
+
+# Pricipal Components Analysis
+# entering raw data and extracting PCs 
+# from the correlation matrix 
+fit2 <- princomp(cor_matrix, cor=FALSE)
+summary(fit2) # print variance accounted for 
+loadings(fit2) # pc loadings 
+plot(fit2,type="lines") # scree plot 
+fit2$scores # the principal components
+biplot(fit2)
+
+
+
+
+
+
+
 
