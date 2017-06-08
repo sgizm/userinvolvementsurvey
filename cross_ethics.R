@@ -461,17 +461,7 @@ table(company)
 clus_scaled <- dplyr::select(clus_scaled, -company)
 
 
-#below is attempt to K-means 
-# Euclidean distance matrix
-dist_sub <- dist(clus_sub)
-# k-means clustering
-km <-kmeans(dist_sub, centers = 4)
-# plot the dataset with clusters
-pairs(clus_sub, col = km$cluster)
-
-
-
-
+# below is companent analysis attempts 
 n.factors <- 4
 ## factanal below does not work because of NA's
 fit <- factanal(clus_sub, 
@@ -488,7 +478,6 @@ plot(fit,type="lines") # scree plot
 biplot(fit) # does not work
 
 # Pricipal Components Analysis
-# entering raw data and extracting PCs 
 # from the correlation matrix 
 fit2 <- princomp(cor_matrix, cor=FALSE)
 summary(fit2) # print variance accounted for 
@@ -498,6 +487,16 @@ fit2$scores # the principal components
 biplot(fit2)
 
 
+
+
+
+# below is attempt to K-means 
+# Euclidean distance matrix
+dist_sub <- dist(clus_sub)
+# k-means clustering
+km <-kmeans(dist_sub, centers = 4)
+# plot the dataset with clusters
+pairs(clus_sub, col = km$cluster)
 
 
 
