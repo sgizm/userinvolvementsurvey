@@ -20,7 +20,7 @@ library(scales)
 library(readr)
 
 
-POPULATION.SIZE = 397
+POPULATION.SIZE = 130
 CURRENTYEAR <- 1900 + as.POSIXlt(Sys.Date())$year
 
 ######################################################################
@@ -36,7 +36,7 @@ data1$jobfunction1 <- factor(data1$X1.1.Which.of.the.following.most.closely.matc
 data1$jobfunction1.other <- data1$If.other..please.specify
 data1$jobfunction1[4] <- "Developers" #Fixing
 data1$jobfunction1.other[4] <- ""
-data1$jobfunction1[9] <- "Developers" #Fixing custoemr manager to mng
+data1$jobfunction1[9] <- "Managers" #Fixing custoemr manager to mng
 data1$jobfunction1.other[9] <- ""
 data1$jobfunction1[15] <- "Managers" #Fixing product owner to mng
 data1$jobfunction1.other[15] <- ""
@@ -46,7 +46,7 @@ print("Primary job function")
 summary(jobfunction1)
 ggplot(data1, aes(x=jobfunction1)) +
   geom_bar(fill="#FF9999", colour="white") +
-  labs(x="Job functions", y="Frequency") + theme(axis.text=element_text(size=13), axis.text.x = element_text(angle = 45, vjust = 1, hjust=1)) + scale_y_continuous(breaks=c(0, 2, 3, 9, 21), labels = c("0", "2", "3", "9", "21"))
+  labs(x="Job functions", y="Frequency") + theme(axis.text=element_text(size=13), axis.text.x = element_text(angle = 45, vjust = 1, hjust=1)) + scale_y_continuous(breaks=c(0, 2, 3, 10, 20), labels = c("0", "2", "3", "10", "20"))
 data1$jobfunction1.other
 
 # 4.1 How much do you agree with the following statements regarding notifying users about experiments? Please answer according to your personal beliefs.
