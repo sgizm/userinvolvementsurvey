@@ -312,7 +312,7 @@ ggplot(data=userinv, aes(x=Statement, y=Rating, fill=Statement)) +
 # + scale_y_discrete(name="Rating", limits=c("1","2", "3","4","5"))
 
 # 2.3 In your experience, how easy is it for the following to get information from users?
-userinf <- data.frame(Statement=factor(rep(userinf.statements, each=length(userinf.pro.mng))),
+userinf <- data.frame(Statement=factor(rep(userinf.statements, each=length(userinf.mng))),
                       Rating=c(
                         userinf.dev,
                         userinf.mng,
