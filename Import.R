@@ -60,6 +60,9 @@ data1$worktime[5] <- NA #fixing
 data1$birthyear <- data1$X1.3.What.is.your.year.of.birth.
 data1$birthyear[31] <- data1$birthyear[31] + 1900 # Fix data1 entry error
 data1$age <- CURRENTYEAR - data1$birthyear
+data1$age_range <- recode(data1$age, "1:20='20 or less'; 21:30='21-30'; 31:40='31-40'; 41:50='41-50'; 50:9999='50 or more'")
+
+
 data1$gender <- factor(data1$X1.4.Which.of.the.following.best.describes.you..,
                       levels = c("F", "M", "NA"),
                       labels = c("Female", "Male", "Other / prefer not to say"))
@@ -708,6 +711,8 @@ data3$gender <- factor(data3$X1.4.Which.of.the.following.best.describes.you..,
 data3$birthyear <- data3$X1.3.What.is.your.year.of.birth.
 data3$birthyear[5] <- data3$birthyear[5] + 1900 # Fix data entry error
 data3$age <- CURRENTYEAR - data3$birthyear
+data3$age_range <- recode(data3$age, "1:20='20 or less'; 21:30='21-30'; 31:40='31-40'; 41:50='41-50'; 50:9999='50 or more'")
+
 
 #Team size
 data3$teamsize <- factor(data3$X1.5.How.many.people.do.you.work.with.on.a.regular.basis.in.the.company....,
