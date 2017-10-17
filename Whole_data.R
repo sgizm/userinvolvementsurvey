@@ -14,12 +14,8 @@
 ######################################################################
 # Imports and constants
 ######################################################################
+source(file='Import.R')
 
-source("Import.R")
-
-### ALL DATA ###
-
-## Merge data from all companies into a single data set
 # First, make company-specific data frames that all have exactly the same columns
 cols1 <- c(2:5, 7, 42:55, 58, 59, 62:64) # Ericsson
 cols2 <- c(2:5, 6, 53:66, 81, 82, 84, 83, 85) # F-secure
@@ -75,3 +71,6 @@ ggplot(clus_data, aes(x=clus_data$team_size)) +
   labs(x="Team size", y="Frequency") + theme(axis.text=element_text(size=13), axis.text.x = element_text(angle = 45, vjust = 1, hjust=1)) + facet_wrap(~clus_data$COMPANY)
 
 ## END OF DEMOGRAPHICS ##
+
+# 2.1
+

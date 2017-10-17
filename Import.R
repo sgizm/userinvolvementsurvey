@@ -24,7 +24,7 @@ library(nFactors)
 library(cluster)
 library(pvclust)
 library(plyr)
-library(dplyr)
+#library(dplyr)
 
 #POPULATION.SIZE = 397
 CURRENTYEAR <- 1900 + as.POSIXlt(Sys.Date())$year
@@ -201,7 +201,7 @@ data1$jobfunction1.other
 # Work time
 print("How long have you been working in your current role")
 summary(worktime)
-ggplot(data1, aes(x=worktime)) +
+ggplot(data1, aes(x=data1$worktime)) +
   geom_histogram(binwidth=10, fill="#FF9999", colour="#FF9999") +
   labs(x="Work time", y="Frequency") 
 
@@ -233,7 +233,7 @@ ggplot(data1, aes(x=age)) +
 
 # Gender
 print("Gender")
-summary(gender)
+#summary(gender)
 ggplot(data1, aes(x=gender)) +
   geom_bar(fill="#FF9999", colour="#FF9999") +
   labs(x="Gender", y="Frequency")
@@ -595,7 +595,7 @@ ggplot(useractivities2, aes(x=Activity, y=Frequency)) + labs(x="Development acti
   geom_bar(stat="identity", fill="lightpink2", colour="black") + theme(axis.text=element_text(size=14))+ scale_x_discrete(limits=c("Forming ideas","Gathering requirements","Software design", "Implementing software", "Testing", "The activities after release", "Customer support", "Consulting", "Billing services", "Other"))
 
 # 2.2 How much do you agree with the following statements?
-userinv2 <- data.frame(Statement=factor(rep(userinv.statements, each=length(data2$userinv.S1))),
+userinv2 <- data.frame(Statement=factor(rep(userinv2.statements, each=length(data2$userinv.S1))),
                       Rating=c(
                         data2$userinv.S1,
                         data2$userinv.S2,
@@ -1350,7 +1350,7 @@ ggplot(data=infofreq4, aes(x=Statement, y=Rating, fill=Statement)) +
   geom_boxplot() + guides(fill=FALSE) + coord_flip() + theme(axis.text=element_text(size=11))
 
 #2.5 Try to remember a situation
-data$userinf.open
+data4$userinf.open
 
 # 3.1 Does your company conduct experiments involving the users?
 ggplot(data4, aes(x=condexp)) +
