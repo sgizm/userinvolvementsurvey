@@ -80,7 +80,7 @@ data1$useractivities.testing <- data1$Testing
 data1$useractivities.after.release <- data1$The.activities.after.release
 data1$useractivities.other <- data1$Other
 data1$useractivities.other.open <- data1$If.other..please.specify..separate.with.commas.
-useractivities1.options <- c("Specifying requirements", "Designing software", "Implementing software", "Testing", "The activities after release", "Other")
+useractivities1.options <- c("Specifying requirements", "Software design", "Implementation", "Testing", "The activities after release", "Other")
 
 # 2.2. How much do you agree with the following statements? (User involvement statements)
 data1$userinv.S1 <- data1$X2.2..How.much.do.you.agree.with.the.following.statements...I.know.who.uses.the.software.I.contribute.to.in.my.work
@@ -100,6 +100,7 @@ userinv1.statements <- c(
 userinv1.options <- c("Completely disagree", "Disagree", "Neither disagree or agree", "Agree", "Completely agree", "I don't know")
 
 # 2.3 In your experience, how easy is it for the following to get information from users?
+# Note that statements are merged into 4 categories. 
 data1$userinf.mgr <- data1$X2.3.In.your.experience..how.easy.is.it.for.the.following.to.get.information.from.users...Managers
 data1$userinf.uxd <- data1$X2.3.In.your.experience..how.easy.is.it.for.the.following.to.get.information.from.users...UX.designers
 data1$userinf.dev <- data1$X2.3.In.your.experience..how.easy.is.it.for.the.following.to.get.information.from.users...Software.developers.
@@ -107,7 +108,7 @@ data1$userinf.tst <- data1$X2.3.In.your.experience..how.easy.is.it.for.the.follo
 data1$userinf.arc <- data1$X2.3.In.your.experience..how.easy.is.it.for.the.following.to.get.information.from.users...Software.architects.
 data1$userinf.ops <- data1$X2.3.In.your.experience..how.easy.is.it.for.the.following.to.get.information.from.users...System.or.network.operators
 data1$userinf.slf <- data1$X2.3.In.your.experience..how.easy.is.it.for.the.following.to.get.information.from.users...Myself
-userinf1.statements <- c("Managers", "UX designers", "Software developers", "Software testers", "Software architects", "System or network operators", "Myself")
+userinf1.statements <- c("Managers", "UX designers", "Developers", "Myself")
 userinf1.options <- c("Very difficult", "Difficult", "Neither easy nor difficult", "Easy", "Very easy", "I don't know")
 
 # 2.4 How often do you use the following ways to get information about users?
@@ -116,10 +117,10 @@ data1$infofreq.O2 <- data1$X2.4.How.often.do.you.use.the.following.ways.to.get.i
 data1$infofreq.O3 <- data1$X2.4.How.often.do.you.use.the.following.ways.to.get.information.about.users...I.interact.with.users.in.person.after.they.used.the.software..e.g...post.use.interview.
 data1$infofreq.O4 <- data1$X2.4.How.often.do.you.use.the.following.ways.to.get.information.about.users...Through.recorded.usage.data..e.g...log.data.or.video.
 infofreq1.statements <- c(
-  "I remotely observe users when they are using the software (e.g., screen sharing)",
-  "I am physically present with users when they are using the software (e.g., talk-aloud study)",
-  "I interact with users in person after they used the software (e.g., post-use interview)",
-  "Through recorded usage data1 (e.g., log data1 or video)")
+  "I remotely observe or interact with users when they are using the software (e.g., screen sharing)",
+  "I interact with the users before they use the software",
+  "I interact with users after they used the software (e.g., post-use interview, feedback)",
+  "Through recorded usage data (e.g., log data)")
 infofreq1.options <- c("Never", "Rarely", "Sometimes", "Often", "Always")
 
 # 2.5 Try to remember a situation where you knew that involving users in development would be useful, but you could not involve them. Please describe the situation and what challenges you faced.
@@ -141,12 +142,12 @@ data1$understanding.S4 <- data1$For.understanding.user.needs.better.........focu
 data1$understanding.S5 <- data1$For.understanding.user.needs.better.........users.themselves.must.be.actively.involved.in.development
 data1$understanding.S6 <- data1$For.understanding.user.needs.better.........we.just.need.to.measure.user.behaviour
 understanding1.statements <- c(
-  "..data1 should always be collected because it might be needed later",
-  "..data1 should only be collected when there is a known need or assumption to test",
-  "..all data1 about user behaviour is useful",
-  "..focused data1 on a specifically chosen user action is useful",
-  "..users themselves must be actively involved in development",
-  "..we just need to measure user behaviour"
+  "..data should always be collected because it might be needed later",
+  "..data should only be collected when there is a known need or assumption",
+  "..rich, detailed data about what users do is useful",
+  "..focused data on a specific user action or behaviour is useful",
+  "..users themselves must be actively involved in shaping the software",
+  "..we need to measure user behaviour to decide what the software should be like"
 )
 understanding1.options <- c("Completely disagree", "Disagree", "Neither disagree or agree", "Agree", "Completely agree", "I don't know")
 
@@ -287,9 +288,6 @@ userinf1 <- data.frame(Statement=factor(rep(userinf1.statements, each=length(dat
                         data1$userinf.mgr,
                         data1$userinf.uxd,
                         data1$userinf.dev,
-                        data1$userinf.tst,
-                        data1$userinf.arc,
-                        data1$userinf.ops,
                         data1$userinf.slf))
 ggplot(userinf1, aes(x=Statement, y=Rating, fill=Statement)) +
   geom_boxplot() + guides(fill=FALSE) + coord_flip()
@@ -402,7 +400,7 @@ data2$useractivities.consulting <- data2$Providing.consulting
 data2$useractivities.billing <- data2$Billing.services
 data2$useractivities.other <- data2$Other
 data2$useractivities.other.open <- data2$If.other..please.specify..separate.with.commas.
-useractivities2.options <- c("Forming ideas", "Gathering requirements", "Software design", "Implementing software", "Testing", "The activities after release", "Customer support", "Consulting", "Billing services", "Other")
+useractivities2.options <- c("Specifiying requirements", "Software design", "Implementation", "Testing", "The activities after release", "Other")
 
 # 2.2. How much do you agree with the following statements? (User involvement statements)
 data2$userinv.S1 <- data2$X2.2..How.much.do.you.agree.with.the.following.statements...I.know.who.uses.the.software.I.contribute.to.in.my.work
@@ -417,10 +415,9 @@ userinv2.statements <- c(
   "I know who uses the software I contribute to in my work",
   "I need to ask for permission to contact users",
   "I frequently have direct contact with users",
-  "I have sufficient information about users??? needs",
+  "I have sufficient information about users' needs",
   "I have information about users that is relevant for my work",
-  "The information I have about users is up to date",
-  "I would like to get more feedback from users"
+  "The information I have about users is up to date"
 )
 userinv2.options <- c("Completely disagree", "Disagree", "Neither disagree or agree", "Agree", "Completely agree", "I don't know")
 
@@ -435,7 +432,7 @@ data2$userinf.con <- data2$X2.3.In.your.experience..how.easy.is.it.for.the.follo
 data2$userinf.cust.sup <- data2$X2.3.In.your.experience..how.easy.is.it.for.the.following.roles.to.get.information.from.users..Please.consider.the.roles.in.your.company.context...Customer.support
 data2$userinf.tra <- data2$X2.3.In.your.experience..how.easy.is.it.for.the.following.roles.to.get.information.from.users..Please.consider.the.roles.in.your.company.context...Trainers
 data2$userinf.slf <- data2$X2.3.In.your.experience..how.easy.is.it.for.the.following.roles.to.get.information.from.users..Please.consider.the.roles.in.your.company.context...Myself
-userinf2.statements <- c("Developers", "Product managers or owners", "Managers, other", "Business developers", "UX designers", "Software architects", "Consultants", "Customer support", "Trainers", "Myself")
+userinf2.statements <- c("Managers", "UX designers", "Developers", "Myself")
 userinf2.options <- c("Very difficult", "Difficult", "Neither easy nor difficult", "Easy", "Very easy", "I don't know")
 
 # 2.4 How often do you use the following ways to get information about users?
@@ -447,12 +444,10 @@ data2$infofreq.O5 <- data2$X2.4.How.often.do.you.use.the.following.ways.to.get.i
 data2$infofreq.O6 <- data2$X2.4.How.often.do.you.use.the.following.ways.to.get.information.about.users...Through.online.discussion.channels..e.g..forums.
 
 infofreq2.statements <- c(
-  "I remotely observe users when they are using the software (e.g., screen sharing)",
-  "I am physically present with users when they are using the software (e.g., talk-aloud study)",
+  "I remotely observe or interact with users when they are using the software (e.g., screen sharing)",
   "I interact with the users before they use the software",
-  "I interact with users in person after they used the software (e.g., post-use interview)",
-  "Through recorded usage data (e.g., log data)",
-  "Through online discussion channels")
+  "I interact with users after they used the software (e.g., post-use interview, feedback)",
+  "Through recorded usage data (e.g., log data)")
 infofreq2.options <- c("Never", "Rarely", "Sometimes", "Often", "Always")
 
 # 2.5 Try to remember a situation where you knew that involving users in development would be useful, but you could not involve them. Please describe the situation and what challenges you faced.
@@ -566,8 +561,9 @@ ggplot(data2, aes(x=end_user)) +
   labs(x="End user", y="Frequency")
 
 # 2.1 In which development activities are users involved in your company? (click all that apply)
-useractivities2.forming.ideas <- sum(data2$useractivities.forming.ideas, na.rm=TRUE)
-useractivities2.designing.software <- sum(data2$useractivities.gathering.requirements, na.rm=TRUE)
+# Note not using some activities 
+#useractivities2.forming.ideas <- sum(data2$useractivities.forming.ideas, na.rm=TRUE)
+useractivities2.gathering.requirements <- sum(data2$Gathering.requirements, na.rm = TRUE)
 useractivities2.software.design <- sum(data2$useractivities.software.design, na.rm=TRUE)
 useractivities2.implementation <- sum(data2$useractivities.implementation, na.rm=TRUE)
 useractivities2.testing <- sum(data2$useractivities.testing, na.rm=TRUE)
@@ -578,21 +574,17 @@ useractivities2.billing <- sum(data2$useractivities.billing, na.rm=TRUE)
 useractivities2.other <- sum(data2$useractivities.other, na.rm=TRUE)
 useractivities2 <- data.frame(Activity=useractivities2.options,
                              Frequency=c(
-                               useractivities2.forming.ideas,
-                               useractivities2.designing.software,
+                               useractivities2.gathering.requirements,
                                useractivities2.software.design,
                                useractivities2.implementation,
                                useractivities2.testing,
                                useractivities2.after.release,
-                               useractivities2.customer.support,
-                               useractivities2.consulting,
-                               useractivities2.billing,
                                useractivities2.other))
 
 print("Frequencies of development activities that users are involved in")
 summary(useractivities2)
 ggplot(useractivities2, aes(x=Activity, y=Frequency)) + labs(x="Development activities where users are involved") +
-  geom_bar(stat="identity", fill="lightpink2", colour="black") + theme(axis.text=element_text(size=14))+ scale_x_discrete(limits=c("Forming ideas","Gathering requirements","Software design", "Implementing software", "Testing", "The activities after release", "Customer support", "Consulting", "Billing services", "Other"))
+  geom_bar(stat="identity", fill="lightpink2", colour="black") + theme(axis.text=element_text(size=10))
 
 # 2.2 How much do you agree with the following statements?
 userinv2 <- data.frame(Statement=factor(rep(userinv2.statements, each=length(data2$userinv.S1))),
@@ -602,8 +594,7 @@ userinv2 <- data.frame(Statement=factor(rep(userinv2.statements, each=length(dat
                         data2$userinv.S3,
                         data2$userinv.S4,
                         data2$userinv.S5,
-                        data2$userinv.S6,
-                        data2$userinv.S7))
+                        data2$userinv.S6))
 ggplot(userinv2, aes(x=Statement, y=Rating, fill=Statement)) +
   geom_boxplot() + guides(fill=FALSE) + coord_flip() + theme(axis.text=element_text(size=16))
 # + scale_y_discrete(name="Rating", limits=c("1","2", "3","4","5"))
@@ -611,28 +602,20 @@ ggplot(userinv2, aes(x=Statement, y=Rating, fill=Statement)) +
 # 2.3 In your experience, how easy is it for the following to get information from users?
 userinf2 <- data.frame(Statement=factor(rep(userinf2.statements, each=length(data2$userinf.mgr))),
                       Rating=c(
-                        data2$userinf.dev,
                         data2$userinf.mgr,
-                        data2$userinf.mgr.other,
-                        data2$userinf.bus.dev,
                         data2$userinf.ux.designer,
-                        data2$userinf.arc,
-                        data2$userinf.con,
-                        data2$userinf.cust.sup,
-                        data2$userinf.tra,
+                        data2$userinf.dev,
                         data2$userinf.slf))
 ggplot(userinf2, aes(x=Statement, y=Rating, fill=Statement)) +
-  geom_boxplot() + guides(fill=FALSE) + coord_flip() + scale_x_discrete(limits=c("Myself", "Trainers", "Customer support", "Consultants", "Architects", "UX designers", "Business developers", "Managers, other", "Product managers or owners", "Developers")) + theme(axis.text=element_text(size=16))
+  geom_boxplot() + guides(fill=FALSE) + coord_flip() 
 
 # 2.4 How often do you use the following ways to get information about users?
 infofreq2 <- data.frame(Statement=factor(rep(infofreq2.statements, each=length(data2$infofreq.O1))),
                        Rating=c(
                          data2$infofreq.O1,
-                         data2$infofreq.O2,
                          data2$infofreq.O3,
                          data2$infofreq.O4,
-                         data2$infofreq.O5,
-                         data2$infofreq.O6))
+                         data2$infofreq.O5))
 ggplot(infofreq2, aes(x=Statement, y=Rating, fill=Statement)) +
   geom_boxplot() + guides(fill=FALSE) + coord_flip() + theme(axis.text=element_text(size=16))
 
@@ -740,7 +723,7 @@ data3$useractivities.fixes <- data3$Providing.fixes
 data3$useractivities.submitting.bugs <- data3$Submitting.bugs
 data3$useractivities.online.discussion <- data3$Participating.in.online.discussion
 data3$useractivities.other <- data3$Other
-useractivities3.options <- c("Forming ideas", "Gathering requirements", "Software design", "Implementing software", "Testing", "The activities after release", "Committing code", "Providing fixes", "Submitting bugs", "Participating in online discussion", "Other")
+useractivities3.options <- c("Specifiying requirements", "Software design", "Implementation", "Testing", "The activities after release", "Other")
 
 #Other roles
 data3$useractivities.other.open <- data3$If.other..please.specify
@@ -760,8 +743,7 @@ userinv3.statements <- c(
   "I frequently have direct contact with users",
   "I have sufficient information about users' needs",
   "I have information about users that is relevant for my work",
-  "The information I have about users is up to date",
-  "I would like to get more feedback from users"
+  "The information I have about users is up to date"
 )
 userinv3.options <- c("Completely disagree", "Disagree", "Neither disagree or agree", "Agree", "Completely agree", "I don't know")
 
@@ -777,7 +759,7 @@ data3$userinf.con <- data3$X2.3.In.your.experience..how.easy.is.it.for.the.follo
 data3$userinf.cust.sup <- data3$X2.3.In.your.experience..how.easy.is.it.for.the.following.roles.to.get.information.from.users...Customer.support
 data3$userinf.tra <- data3$X2.3.In.your.experience..how.easy.is.it.for.the.following.roles.to.get.information.from.users...Trainers
 data3$userinf.slf <- data3$X2.3.In.your.experience..how.easy.is.it.for.the.following.roles.to.get.information.from.users...Myself
-userinf3.statements <- c("Product managers", "Managers, other", "UX designers", "Vaadin Framework developers", "Vaadin Pro Tools developers", "Software architects", "Product and service advocates", "Consultants", "Customer support", "Trainers", "Myself")
+userinf3.statements <- c("Managers", "UX designers","Developers", "Myself")
 userinf3.options <- c("Very difficult", "Difficult", "Neither easy nor difficult", "Easy", "Very easy", "I don't know")
 
 # 2.4 How often do you use the following ways to get information about users?
@@ -789,12 +771,10 @@ data3$infofreq.O5 <- data3$X2.4.How.often.do.you.use.the.following.ways.to.get.i
 data3$infofreq.O6 <- data3$X2.4.How.often.do.you.use.the.following.ways.to.get.information.about.users...Through.online.discussion.channels..e.g..forums.
 
 infofreq3.statements <- c(
-  "I remotely observe users when they are using the software (e.g., screen sharing)",
-  "I am physically present with users when they are using the software (e.g., talk-aloud study)",
+  "I remotely observe or interact with users when they are using the software (e.g., screen sharing)",
   "I interact with the users before they use the software",
-  "I interact with users in person after they used the software (e.g., post-use interview)",
-  "Through recorded usage data (e.g., log data)",
-  "Through online discussion channels")
+  "I interact with users after they used the software (e.g., post-use interview, feedback)",
+  "Through recorded usage data (e.g., log data)")
 infofreq3.options <- c("Never", "Rarely", "Sometimes", "Often", "Always")
 
 # 2.5 Try to remember a situation where you knew that involving users in development would be useful, but you could not involve them. Please describe the situation and what challenges you faced.
@@ -923,36 +903,31 @@ ggplot(data3, aes(x=end_user)) +
   labs(x="End user", y="Frequency") + theme(axis.text=element_text(size=13)) + scale_y_continuous(breaks=c(0,5,7,10,14), labels = c("0", "5", "7", "10", "14"))
 
 # 2.1 In which development activities are users involved in your company? (click all that apply)
-useractivities3.forming.ideas <- sum(data3$useractivities.forming.ideas, na.rm=TRUE)
-useractivities3.designing.software <- sum(data3$useractivities.gathering.requirements, na.rm=TRUE)
+# Note the changes in the activity staetments 
+#useractivities3.forming.ideas <- sum(data3$useractivities.forming.ideas, na.rm=TRUE)
+useractivities3.gathering.requirements <- sum(data3$useractivities.gathering.requirements, na.rm=TRUE) 
 useractivities3.software.design <- sum(data3$useractivities.software.design, na.rm=TRUE)
 useractivities3.implementation <- sum(data3$useractivities.implementation, na.rm=TRUE)
 useractivities3.testing <- sum(data3$useractivities.testing, na.rm=TRUE)
 useractivities3.after.release <- sum(data3$useractivities.after.release, na.rm=TRUE)
-useractivities3.commiting.code <- sum(data3$useractivities.commiting.code, na.rm=TRUE)
-useractivities3.providing.fixes <- sum(data3$useractivities.providing.fixes, na.rm=TRUE)
-useractivities3.submitting.bugs <- sum(data3$useractivities.submitting.bugs, na.rm=TRUE)
-useractivities3.online.discussion<- sum(data3$useractivities.online.discussion, na.rm=TRUE)
+#useractivities3.commiting.code <- sum(data3$useractivities.commiting.code, na.rm=TRUE)
+#useractivities3.providing.fixes <- sum(data3$useractivities.providing.fixes, na.rm=TRUE)
+#useractivities3.submitting.bugs <- sum(data3$useractivities.submitting.bugs, na.rm=TRUE)
+#useractivities3.online.discussion<- sum(data3$useractivities.online.discussion, na.rm=TRUE)
 useractivities3.other <- sum(data3$useractivities.other, na.rm=TRUE)
 useractivities3 <- data.frame(Activity=useractivities3.options,
                              Frequency=c(
-                               useractivities3.forming.ideas,
-                               useractivities3.designing.software,
+                               useractivities3.gathering.requirements,
                                useractivities3.software.design,
                                useractivities3.implementation,
                                useractivities3.testing,
                                useractivities3.after.release,
-                               useractivities3.commiting.code,
-                               useractivities3.providing.fixes,
-                               useractivities3.submitting.bugs,
-                               useractivities3.online.discussion,
                                useractivities3.other))
 
 print("Frequencies of development activities that users are involved in")
 summary(useractivities3)
 ggplot(data=useractivities3, aes(x=Activity, y=Frequency)) +
-  geom_bar(stat="identity", fill="plum4", colour="black") + theme(axis.text=element_text(size=14), axis.text.x = element_text(angle = 45, vjust = 1, hjust=1))+ scale_x_discrete(limits=c("Forming ideas","Gathering requirements","Software design", "Implementing software", "Testing", "The activities after release", "Committing code", "Providing fixes", "Submitting bugs", "Participating in online discussion", "Other")) + scale_y_continuous(breaks=c(0,3,5,8,9,12,13,16,17), labels = c("0", "3", "5", "8", "9", "12", "13", "16", "17"))
-
+  geom_bar(stat="identity", fill="plum4", colour="black") 
 
 # 2.2 How much do you agree with the following statements?
 userinv3 <- data.frame(Statement=factor(rep(userinv3.statements, each=length(data3$userinv.S1))),
@@ -962,8 +937,7 @@ userinv3 <- data.frame(Statement=factor(rep(userinv3.statements, each=length(dat
                         data3$userinv.S3,
                         data3$userinv.S4,
                         data3$userinv.S5,
-                        data3$userinv.S6,
-                        data3$userinv.S7))
+                        data3$userinv.S6))
 ggplot(data=userinv3, aes(x=Statement, y=Rating, fill=Statement)) +
   geom_boxplot() + guides(fill=FALSE) + coord_flip() + theme(axis.text=element_text(size=16))
 # + scale_y_discrete(name="Rating", limits=c("1","2", "3","4","5"))
@@ -971,29 +945,20 @@ ggplot(data=userinv3, aes(x=Statement, y=Rating, fill=Statement)) +
 # 2.3 In your experience, how easy is it for the following to get information from users?
 userinf3 <- data.frame(Statement=factor(rep(userinf3.statements, each=length(data3$userinf.pro.mng))),
                       Rating=c(
-                        data3$userinf.pro.mng,
                         data3$userinf.mng,
                         data3$userinf.ux.designer,
                         data3$userinf.dev.frame,
-                        data3$userinf.dev.tool,
-                        data3$userinf.arc,
-                        data3$userinf.adv,
-                        data3$userinf.con,
-                        data3$userinf.cust.sup,
-                        data3$userinf.tra,
                         data3$userinf.slf))
 ggplot(data=userinf3, aes(x=Statement, y=Rating, fill=Statement)) +
-  geom_boxplot() + guides(fill=FALSE) + coord_flip() + scale_x_discrete(limits=c("Myself", "Trainers", "Customer support", "Consultants", "Product and service advocates", "Software architects", "Vaadin Pro Tools developers", "Vaadin Framework developers", "UX designers", "Managers, other", "Product managers")) + theme(axis.text=element_text(size=16))
+  geom_boxplot() + guides(fill=FALSE) + coord_flip() 
 
 # 2.4 How often do you use the following ways to get information about users?
 infofreq3 <- data.frame(Statement=factor(rep(infofreq3.statements, each=length(data3$infofreq.O1))),
                        Rating=c(
                          data3$infofreq.O1,
-                         data3$infofreq.O2,
                          data3$infofreq.O3,
                          data3$infofreq.O4,
-                         data3$infofreq.O5,
-                         data3$infofreq.O6))
+                         data3$infofreq.O5))
 ggplot(data=infofreq3, aes(x=Statement, y=Rating, fill=Statement)) +
   geom_boxplot() + guides(fill=FALSE) + coord_flip() + theme(axis.text=element_text(size=11))
 
@@ -1101,6 +1066,7 @@ data4$end_user <- factor(data4$X1.7.Which.one.do.you.consider.to.be.the.current.
 data4$end_user_open <- data4$If.customer.project..please.provide.the.name.of.the.customer.s....The.answers.are.confidential..
 
 # 2.1 In which development activities are users involved in your company? (click all that apply)
+# Note the changes in the activities: first two statements and design statements. 
 data4$useractivities.forming.ideas <- data4$Forming.product.or.service.ideas
 data4$useractivities.gathering.requirements <- data4$Gathering.requirements
 data4$useractivities.ui.design <- data4$UI.design
@@ -1110,7 +1076,7 @@ data4$useractivities.testing <- data4$Testing
 data4$useractivities.after.release <- data4$The.activities.after.release
 data4$useractivities.other <- data4$Other
 #data4$useractivities.other.open <- data4$If.other..please.specify
-useractivities4.options <- c("Forming ideas", "Gathering requirements", "UI design", "Technical design", "Implementation", "Testing", "The activities after release", "Other")
+useractivities4.options <- c("Specifying requirements", "Software design", "Implementation", "Testing", "The activities after release", "Other")
 
 #Other activities
 data4$useractivities.other.open <- data4$If.other..please.specify.1
@@ -1130,8 +1096,7 @@ userinv4.statements <- c(
   "I frequently have direct contact with users",
   "I have sufficient information about users' needs",
   "I have information about users that is relevant for my work",
-  "The information I have about users is up to date",
-  "I would like to get more feedback from users"
+  "The information I have about users is up to date"
 )
 userinv4.options <- c("Completely disagree", "Disagree", "Neither disagree or agree", "Agree", "Completely agree", "I don't know")
 
@@ -1143,7 +1108,7 @@ data4$userinf.ux.designer <- data4$X2.3.In.your.experience..how.easy.is.it.for.t
 data4$userinf.graph.designer <- data4$X2.3.In.your.experience..how.easy.is.it.for.the.following.roles.to.get.information.from.users..Please.consider.the.roles.in.your.company.context...Graphic.designers
 data4$userinf.coach <- data4$X2.3.In.your.experience..how.easy.is.it.for.the.following.roles.to.get.information.from.users..Please.consider.the.roles.in.your.company.context...Coaches
 data4$userinf.slf <- data4$X2.3.In.your.experience..how.easy.is.it.for.the.following.roles.to.get.information.from.users..Please.consider.the.roles.in.your.company.context...Myself
-userinf4.statements <- c("Developers", "Managers", "Business developers", "UX designers", "Graphical designers", "Coaches", "Myself")
+userinf4.statements <- c("Managers", "UX designers", "Developers", "Myself")
 userinf4.options <- c("Very difficult", "Difficult", "Neither easy nor difficult", "Easy", "Very easy", "I don't know")
 
 # 2.4 How often do you use the following ways to get information about users?
@@ -1155,12 +1120,10 @@ data4$infofreq.O5 <- data4$X2.4.How.often.do.you.use.the.following.ways.to.get.i
 data4$infofreq.O6 <- data4$X2.4.How.often.do.you.use.the.following.ways.to.get.information.about.users...Through.direct.feedback..e.g..via.email..forums..
 
 infofreq4.statements <- c(
-  "I remotely observe users when they are using the software (e.g., screen sharing)",
-  "I am physically present with users when they are using the software (e.g., talk-aloud study)",
+  "I remotely observe or interact with users when they are using the software (e.g., screen sharing)",
   "I interact with the users before they use the software",
-  "I interact with users after they used the software (e.g., post-use interview)",
-  "Through recorded usage data (e.g., log data)",
-  "Through direct feedback (e.g. via email, forums")
+  "I interact with users after they used the software (e.g., post-use interview, feedback)",
+  "Through recorded usage data (e.g., log data)")
 infofreq4.options <- c("Never", "Rarely", "Sometimes", "Often", "Always")
 
 # 2.5 Try to remember a situation where you knew that involving users in development would be useful, but you could not involve them. Please describe the situation and what challenges you faced.
@@ -1285,20 +1248,19 @@ summary(data4$end_user_open)
 ##BE BACK HERE! Na'a could be the problem
 
 # 2.1 In which development activities are users involved in your company? (click all that apply)
-useractivities4.forming.ideas <- sum(data4$useractivities.forming.ideas, na.rm=TRUE)
+#useractivities4.forming.ideas <- sum(data4$useractivities.forming.ideas, na.rm=TRUE) 
+#merging forming ideas with gathering requirements below
 useractivities4.gathering.requirements <- sum(data4$useractivities.gathering.requirements, na.rm=TRUE)
 useractivities4.ui.design <- sum(data4$useractivities.ui.design, na.rm=TRUE)
-useractivities4.tech.design <- sum(data4$useractivities.tech.design, na.rm=TRUE)
+#useractivities4.tech.design <- sum(data4$useractivities.tech.design, na.rm=TRUE) + sum(data4$useractivities.ui.design, na.rm=TRUE)
 useractivities4.implementation <- sum(data4$useractivities.implementation, na.rm=TRUE)
 useractivities4.testing <- sum(data4$useractivities.testing, na.rm=TRUE)
 useractivities4.after.release <- sum(data4$useractivities.after.release, na.rm=TRUE)
 useractivities4.other <- sum(data4$useractivities.other, na.rm=TRUE)
 useractivities4 <- data.frame(Activity=useractivities4.options,
                              Frequency=c(
-                               useractivities4.forming.ideas,
                                useractivities4.gathering.requirements,
                                useractivities4.ui.design,
-                               useractivities4.tech.design,
                                useractivities4.implementation,
                                useractivities4.testing,
                                useractivities4.after.release,
@@ -1307,47 +1269,43 @@ useractivities4 <- data.frame(Activity=useractivities4.options,
 print("Frequencies of development activities that users are involved in")
 summary(useractivities4)
 ggplot(data=useractivities4, aes(x=Activity, y=Frequency)) +
-  geom_bar(stat="identity", fill="plum4", colour="black") + theme(axis.text=element_text(size=14), axis.text.x = element_text(angle = 45, vjust = 1, hjust=1))+ scale_x_discrete(limits=c("Forming ideas","Gathering requirements","UI design", "Technical design", "Implementation", "Testing", "The activities after release", "Other")) + scale_y_continuous(breaks=c(0,5,24,27,46,48,50,53), labels = c("0", "5", "24", "27", "46", "48", "50", "53"))
+  geom_bar(stat="identity", fill="plum4", colour="black") + theme(axis.text=element_text(size=14), axis.text.x = element_text(angle = 45, vjust = 1, hjust=1))+ scale_x_discrete(limits=c("Specifying requirements", "Software design", "Implementation", "Testing", "The activities after release", "Other")) + scale_y_continuous(breaks=c(0,99,74,27,48,46,5), labels = c("0", "99", "74", "27", "48", "46", "5"))
 
 
 # 2.2 How much do you agree with the following statements?
 userinv4 <- data.frame(Statement=factor(rep(userinv4.statements, each=length(data4$userinv.S1))),
                       Rating=c(
-                        data4$userinv.S1,
+                        datuserinv.S1.S1,
                         data4$userinv.S2,
                         data4$userinv.S3,
                         data4$userinv.S4,
                         data4$userinv.S5,
                         data4$userinv.S6,
-                        data4$userinv.S7))
-ggplot(data=userinv4, aes(x=Statement, y=Rating, fill=Statement)) +
+                        Jobf = data4$role
+                      ))
+                        
+ggplot(userinv4, aes(x=Statement, y=Rating, fill=Statement)) +
   geom_boxplot() + guides(fill=FALSE) + coord_flip() + theme(axis.text=element_text(size=16))
 # + scale_y_discrete(name="Rating", limits=c("1","2", "3","4","5"))
 
 # 2.3 In your experience, how easy is it for the following to get information from users?
 userinf4 <- data.frame(Statement=factor(rep(userinf4.statements, each=length(data4$userinf.mng))),
                       Rating=c(
-                        data4$userinf.dev,
                         data4$userinf.mng,
-                        data4$userinf.bis.dev,
                         data4$userinf.ux.designer,
-                        data4$userinf.graph.designer,
-                        data4$userinf.coach,
+                        data4$userinf.dev,
                         data4$userinf.slf))
 ggplot(data=userinf4, aes(x=Statement, y=Rating, fill=Statement)) +
-  geom_boxplot() + guides(fill=FALSE) + coord_flip() + scale_x_discrete(limits=c("Myself", "Trainers", "Customer support", "Consultants", "Product and service advocates", "Software architects", "Vaadin Pro Tools developers", "Vaadin Framework developers", "UX designers", "Managers, other", "Product managers")) + theme(axis.text=element_text(size=16))
+  geom_boxplot() + guides(fill=FALSE) + coord_flip() 
 
 # 2.4 How often do you use the following ways to get information about users?
 infofreq4 <- data.frame(Statement=factor(rep(infofreq4.statements, each=length(data4$infofreq.O1))),
                        Rating=c(
-                         data4$infofreq.O1,
                          data4$infofreq.O2,
                          data4$infofreq.O3,
                          data4$infofreq.O4,
-                         data4$infofreq.O5,
-                         data4$infofreq.O6))
-ggplot(data=infofreq4, aes(x=Statement, y=Rating, fill=Statement)) +
-  geom_boxplot() + guides(fill=FALSE) + coord_flip() + theme(axis.text=element_text(size=11))
+                         data4$infofreq.O5))
+ggplot(data=infofreq4, aes(x=Statement, y=Rating, fill=Statement)) + geom_boxplot() + guides(fill=FALSE) + coord_flip() 
 
 #2.5 Try to remember a situation
 data4$userinf.open

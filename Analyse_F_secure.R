@@ -286,7 +286,7 @@ ggplot(data, aes(x=end_user)) +
 
 # 2.1 In which development activities are users involved in your company? (click all that apply)
 useractivities.forming.ideas <- sum(data$useractivities.forming.ideas, na.rm=TRUE)
-useractivities.designing.software <- sum(data$useractivities.gathering.requirements, na.rm=TRUE)
+useractivities.gathering.requirements <- sum(data$useractivities.gathering.requirements, na.rm=TRUE)
 useractivities.software.design <- sum(data$useractivities.software.design, na.rm=TRUE)
 useractivities.implementation <- sum(data$useractivities.implementation, na.rm=TRUE)
 useractivities.testing <- sum(data$useractivities.testing, na.rm=TRUE)
@@ -298,7 +298,7 @@ useractivities.other <- sum(data$useractivities.other, na.rm=TRUE)
 useractivities <- data.frame(Activity=useractivities.options,
                              Frequency=c(
                                useractivities.forming.ideas,
-                               useractivities.designing.software,
+                               useractivities.gathering.requirements,
                                useractivities.software.design,
                                useractivities.implementation,
                                useractivities.testing,
