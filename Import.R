@@ -196,15 +196,16 @@ print("Primary job function")
 summary(jobfunction1)
 ggplot(data1, aes(x=role)) +
   geom_bar(fill="#FF9999", colour="white") +
-  labs(x="Job functions", y="Frequency") + theme(axis.text=element_text(size=13), axis.text.x = element_text(angle = 45, vjust = 1, hjust=1)) + scale_y_continuous(breaks=c(0, 2, 3, 9, 21), labels = c("0", "2", "3", "9", "21"))
+  labs(x="Ericsson roles", y="Frequency") + theme(axis.text=element_text(size=13), axis.text.x = element_text(angle = 45, vjust = 1, hjust=1)) + scale_y_continuous(breaks=c(0, 2, 3, 10, 20), labels = c("0", "2", "3", "10", "20"))
 data1$jobfunction1.other
 
 # Work time
 print("How long have you been working in your current role")
 summary(worktime)
 ggplot(data1, aes(x=data1$worktime)) +
-  geom_histogram(binwidth=10, fill="#FF9999", colour="#FF9999") +
-  labs(x="Work time", y="Frequency") 
+  geom_histogram(binwidth=12, fill="#FF9999", colour="#FF9999") +
+  labs(x="Ericsson work time", y="Frequency") + theme(axis.text=element_text(size=13)) +
+  scale_x_continuous(breaks=c(1, 12, 24, 36, 48, 60, 72, 96, 108, 120, 132), labels=c("<1y", "1y", "2y","3y", "4y", "5y","6y", "8y", "9y", "10y", ">10y")) + scale_y_continuous(breaks=c(0,1,4,5,6,7,8,9), labels = c("0", "1", "4", "5", "6","7", "8", "9"))
 
 ggplot(data1, aes(x=worktime)) + 
   geom_histogram(aes(y=..density..),# Histogram with density instead of count on y-axis
@@ -232,19 +233,24 @@ ggplot(data1, aes(x=age)) +
                  colour="black", fill="white") +
   geom_density(alpha=.2, fill="#FF9999", colour="#FF9999")  # Overlay with transparent density plot
 
+ggplot(data1, aes(x=age_range)) +
+  geom_bar(fill="#FF9999", colour="white") +
+  labs(x="Ericsson age range", y="Frequency") + theme(axis.text=element_text(size=13), axis.text.x = element_text(angle = 45, vjust = 1, hjust=1))
+
+
 # Gender
 print("Gender")
 #summary(gender)
 ggplot(data1, aes(x=gender)) +
   geom_bar(fill="#FF9999", colour="#FF9999") +
-  labs(x="Gender", y="Frequency")
+  labs(x="Ericsson gender", y="Frequency")
 
 # Team size
 print("Team size")
 summary(teamsize)
 ggplot(data1, aes(x=teamsize)) +
   geom_bar(fill="#FF9999", colour="#FF9999") +
-  labs(x="Team size", y="Frequency")
+  labs(x="Ericsson team size", y="Frequency")
 
 #🚩🚩🚩🚩🚩🚩���
 ## Section 2 - Ericsson
@@ -268,7 +274,8 @@ useractivities1 <- data.frame(Activity=useractivities1.options,
 print("Frequencies of development activities that users are involved in")
 summary(useractivities1)
 ggplot(useractivities1, aes(x=Activity, y=Frequency)) +
-  geom_bar(stat="identity", fill="#FF9999", colour="#FF9999")
+  geom_bar(stat="identity", fill="#FF9999", colour="#FF9999") +
+  labs(x="Ericsson user activities", y="Frequency")
 
 # 2.2 How much do you agree with the following statements?
 userinv1 <- data.frame(Statement=factor(rep(userinv1.statements, each=length(data1$userinv.S1))),
@@ -278,9 +285,13 @@ userinv1 <- data.frame(Statement=factor(rep(userinv1.statements, each=length(dat
                         data1$userinv.S3,
                         data1$userinv.S4,
                         data1$userinv.S5,
-                        data1$userinv.S6))
+                        data1$userinv.S6),
+                      Jobf = data1$role,
+                      Comp = "Ericsson"
+)
 ggplot(userinv1, aes(x=Statement, y=Rating, fill=Statement)) +
-  geom_boxplot() + guides(fill=FALSE) + coord_flip()
+  geom_boxplot() + guides(fill=FALSE) + coord_flip() +
+  facet_wrap(~userinv1$Jobf)
 
 # 2.3 In your experience, how easy is it for the following to get information from users?
 userinf1 <- data.frame(Statement=factor(rep(userinf1.statements, each=length(data1$userinf.mgr))),
@@ -288,7 +299,9 @@ userinf1 <- data.frame(Statement=factor(rep(userinf1.statements, each=length(dat
                         data1$userinf.mgr,
                         data1$userinf.uxd,
                         data1$userinf.dev,
-                        data1$userinf.slf))
+                        data1$userinf.slf),
+                      Jobf = data1$role,
+                      Comp = "Ericsson")
 ggplot(userinf1, aes(x=Statement, y=Rating, fill=Statement)) +
   geom_boxplot() + guides(fill=FALSE) + coord_flip()
 
@@ -298,7 +311,9 @@ infofreq1 <- data.frame(Statement=factor(rep(infofreq1.statements, each=length(d
                          data1$infofreq.O1,
                          data1$infofreq.O2,
                          data1$infofreq.O3,
-                         data1$infofreq.O4))
+                         data1$infofreq.O4),
+                       Jobf = data1$role,
+                       Comp = 'Ericsson')
 ggplot(infofreq1, aes(x=Statement, y=Rating, fill=Statement)) +
   geom_boxplot() + guides(fill=FALSE) + coord_flip()
 
@@ -315,7 +330,9 @@ understanding1 <- data.frame(Statement=factor(rep(understanding1.statements, eac
                               data1$understanding.S3,
                               data1$understanding.S4,
                               data1$understanding.S5,
-                              data1$understanding.S6))
+                              data1$understanding.S6),
+                            Jobf = data1$role,
+                            Comp = 'Ericsson')
 ggplot(understanding1, aes(x=Statement, y=Rating, fill=Statement)) +
   geom_boxplot() + guides(fill=FALSE) + coord_flip()
 
@@ -329,8 +346,9 @@ undernotif1 <- data.frame(Statement=factor(rep(usernotif1.statements, each=lengt
                             data1$usernotif.S5,
                             data1$usernotif.S6,
                             data1$usernotif.S7), 
-                          Jobf = data1$role)
-ggplot(undernotif1, aes(x=Statement, y=Rating, fill=Statement)) +
+                          Jobf = data1$role,
+                          Comp = 'Ericsson')
+ggplot(data=undernotif1, aes(x=Statement, y=Rating, fill=Statement)) +
   geom_boxplot() + guides(fill=FALSE) + coord_flip() + theme(axis.text=element_text(size=11)) + ggtitle("Ericsson")
 
 # 4.2 How much do you agree with the following statements about involving users in experiments? Please answer according to your personal beliefs.
@@ -343,8 +361,9 @@ expinv1 <- data.frame(Statement=factor(rep(expinv1.statements, each=length(data1
                         data1$expinv.S5,
                         data1$expinv.S6,
                         data1$expinv.S7),
-                      Jobf = data1$role)
-ggplot(expinv1, aes(x=Statement, y=Rating, fill=Statement)) +
+                      Jobf = data1$role,
+                      Comp = 'Ericsson')
+ggplot(data=expinv1, aes(x=Statement, y=Rating, fill=Statement)) +
   geom_boxplot() + guides(fill=FALSE) + coord_flip() + theme(axis.text=element_text(size=11))
 
 #🚩🚩🚩🚩🚩🚩🚩🚩🚩🚩🚩🚩
@@ -594,9 +613,14 @@ userinv2 <- data.frame(Statement=factor(rep(userinv2.statements, each=length(dat
                         data2$userinv.S3,
                         data2$userinv.S4,
                         data2$userinv.S5,
-                        data2$userinv.S6))
+                        data2$userinv.S6),
+                      Jobf = data2$role,
+                      Comp = "F-secure"
+)
+
 ggplot(userinv2, aes(x=Statement, y=Rating, fill=Statement)) +
-  geom_boxplot() + guides(fill=FALSE) + coord_flip() + theme(axis.text=element_text(size=16))
+  geom_boxplot() + guides(fill=FALSE) + coord_flip() + theme(axis.text=element_text(size=16)) +
+  facet_wrap(~userinv2$Jobf)
 # + scale_y_discrete(name="Rating", limits=c("1","2", "3","4","5"))
 
 # 2.3 In your experience, how easy is it for the following to get information from users?
@@ -605,7 +629,9 @@ userinf2 <- data.frame(Statement=factor(rep(userinf2.statements, each=length(dat
                         data2$userinf.mgr,
                         data2$userinf.ux.designer,
                         data2$userinf.dev,
-                        data2$userinf.slf))
+                        data2$userinf.slf),
+                      Jobf = data2$role,
+                      Comp = "F-secure")
 ggplot(userinf2, aes(x=Statement, y=Rating, fill=Statement)) +
   geom_boxplot() + guides(fill=FALSE) + coord_flip() 
 
@@ -615,7 +641,9 @@ infofreq2 <- data.frame(Statement=factor(rep(infofreq2.statements, each=length(d
                          data2$infofreq.O1,
                          data2$infofreq.O3,
                          data2$infofreq.O4,
-                         data2$infofreq.O5))
+                         data2$infofreq.O5),
+                       Jobf = data2$role,
+                       Comp = 'F-secure')
 ggplot(infofreq2, aes(x=Statement, y=Rating, fill=Statement)) +
   geom_boxplot() + guides(fill=FALSE) + coord_flip() + theme(axis.text=element_text(size=16))
 
@@ -632,7 +660,9 @@ understanding2 <- data.frame(Statement=factor(rep(understanding2.statements, eac
                               data2$understanding.S3,
                               data2$understanding.S4,
                               data2$understanding.S5,
-                              data2$understanding.S6))
+                              data2$understanding.S6),
+                            Jobf = data2$role,
+                            Comp = 'F-secure')
 ggplot(data=understanding2, aes(x=Statement, y=Rating, fill=Statement)) +
   geom_boxplot() + guides(fill=FALSE) + coord_flip() + scale_x_discrete(limits=c("..we need to measure user behaviour to decide what the software should be like","..users themselves must be actively involved in shaping the software", "..focused data on a specific user action or behaviour is useful", "..rich, detailed data about what users do is useful", "..data should only be collected when there is a known need or assumption", "..data should always be collected because it might be needed later" )) + theme(axis.text=element_text(size=11))
 
@@ -645,8 +675,9 @@ undernotif2 <- data.frame(Statement=factor(rep(usernotif2.statements, each=lengt
                             data2$usernotif.S4,
                             data2$usernotif.S5,
                             data2$usernotif.S6,
-                            data2$usernotif.S7)
-                          , Jobf = data2$role)
+                            data2$usernotif.S7),
+                          Jobf = data2$role,
+                          Comp = 'F-secure')
 ggplot(data=undernotif2, aes(x=Statement, y=Rating, fill=Statement)) +
   geom_boxplot() + guides(fill=FALSE) + coord_flip() + theme(axis.text=element_text(size=11)) + ggtitle("F-secure")
 
@@ -660,7 +691,8 @@ expinv2 <- data.frame(Statement=factor(rep(expinv2.statements, each=length(data2
                         data2$expinv.S5,
                         data2$expinv.S6,
                         data2$expinv.S7),
-                      Jobf = data2$role)
+                      Jobf = data2$role,
+                      Comp = 'F-secure')
 ggplot(data=expinv2, aes(x=Statement, y=Rating, fill=Statement)) +
   geom_boxplot() + guides(fill=FALSE) + coord_flip() + theme(axis.text=element_text(size=11))
 
@@ -937,9 +969,13 @@ userinv3 <- data.frame(Statement=factor(rep(userinv3.statements, each=length(dat
                         data3$userinv.S3,
                         data3$userinv.S4,
                         data3$userinv.S5,
-                        data3$userinv.S6))
+                        data3$userinv.S6),
+                      Jobf = data3$role,
+                      Comp = "Vaadin"
+                      )
 ggplot(data=userinv3, aes(x=Statement, y=Rating, fill=Statement)) +
-  geom_boxplot() + guides(fill=FALSE) + coord_flip() + theme(axis.text=element_text(size=16))
+  geom_boxplot() + guides(fill=FALSE) + coord_flip() + theme(axis.text=element_text(size=16)) +
+  facet_wrap(~userinv3$Jobf)
 # + scale_y_discrete(name="Rating", limits=c("1","2", "3","4","5"))
 
 # 2.3 In your experience, how easy is it for the following to get information from users?
@@ -948,7 +984,9 @@ userinf3 <- data.frame(Statement=factor(rep(userinf3.statements, each=length(dat
                         data3$userinf.mng,
                         data3$userinf.ux.designer,
                         data3$userinf.dev.frame,
-                        data3$userinf.slf))
+                        data3$userinf.slf),
+                      Jobf = data3$role,
+                      Comp = "Vaadin")
 ggplot(data=userinf3, aes(x=Statement, y=Rating, fill=Statement)) +
   geom_boxplot() + guides(fill=FALSE) + coord_flip() 
 
@@ -958,7 +996,10 @@ infofreq3 <- data.frame(Statement=factor(rep(infofreq3.statements, each=length(d
                          data3$infofreq.O1,
                          data3$infofreq.O3,
                          data3$infofreq.O4,
-                         data3$infofreq.O5))
+                         data3$infofreq.O5),
+                       Jobf = data3$role,
+                       Comp = 'Vaadin')
+                       
 ggplot(data=infofreq3, aes(x=Statement, y=Rating, fill=Statement)) +
   geom_boxplot() + guides(fill=FALSE) + coord_flip() + theme(axis.text=element_text(size=11))
 
@@ -981,7 +1022,9 @@ understanding3 <- data.frame(Statement=factor(rep(understanding3.statements, eac
                               data3$understanding.S3,
                               data3$understanding.S4,
                               data3$understanding.S5,
-                              data3$understanding.S6))
+                              data3$understanding.S6),
+                            Jobf = data3$role,
+                            Comp = 'Vaadin')
 ggplot(data=understanding3, aes(x=Statement, y=Rating, fill=Statement)) +
   geom_boxplot() + guides(fill=FALSE) + coord_flip() + scale_x_discrete(limits=c("..we need to measure user behaviour to decide what the software should be like","..users themselves must be actively involved in shaping the software", "..focused data on a specific user action or behaviour is useful", "..rich, detailed data about what users do is useful", "..data should only be collected when there is a known need or assumption", "..data should always be collected because it might be needed later" )) + theme(axis.text=element_text(size=11))
 # 4.1 How much do you agree with the following statements regarding notifying users about experiments? Please answer according to your personal beliefs.
@@ -993,8 +1036,9 @@ undernotif3 <- data.frame(Statement=factor(rep(usernotif3.statements, each=lengt
                             data3$usernotif.S4,
                             data3$usernotif.S5,
                             data3$usernotif.S6,
-                            data3$usernotif.S7)
-                          ,Jobf = data3$role)
+                            data3$usernotif.S7),
+                          Jobf = data3$role,
+                          Comp = 'Vaadin')
 ggplot(data=undernotif3, aes(x=Statement, y=Rating, fill=Statement)) +
   geom_boxplot() + guides(fill=FALSE) + coord_flip() + theme(axis.text=element_text(size=11)) + ggtitle("Vaadin")
 
@@ -1008,7 +1052,8 @@ expinv3 <- data.frame(Statement=factor(rep(expinv3.statements, each=length(data3
                         data3$expinv.S5,
                         data3$expinv.S6,
                         data3$expinv.S7),
-                      Jobf = data3$role)
+                      Jobf = data3$role,
+                      Comp = 'Vaadin')
 ggplot(data=expinv3, aes(x=Statement, y=Rating, fill=Statement)) +
   geom_boxplot() + guides(fill=FALSE) + coord_flip() + theme(axis.text=element_text(size=11))
 
@@ -1275,17 +1320,19 @@ ggplot(data=useractivities4, aes(x=Activity, y=Frequency)) +
 # 2.2 How much do you agree with the following statements?
 userinv4 <- data.frame(Statement=factor(rep(userinv4.statements, each=length(data4$userinv.S1))),
                       Rating=c(
-                        datuserinv.S1.S1,
+                        data4$userinv.S1,
                         data4$userinv.S2,
                         data4$userinv.S3,
                         data4$userinv.S4,
                         data4$userinv.S5,
-                        data4$userinv.S6,
-                        Jobf = data4$role
-                      ))
+                        data4$userinv.S6),
+                      Jobf = data4$role,
+                      Comp = "Reaktor"
+                      )
                         
 ggplot(userinv4, aes(x=Statement, y=Rating, fill=Statement)) +
   geom_boxplot() + guides(fill=FALSE) + coord_flip() + theme(axis.text=element_text(size=16))
+#+ facet_wrap(~userinv4$Jobf)
 # + scale_y_discrete(name="Rating", limits=c("1","2", "3","4","5"))
 
 # 2.3 In your experience, how easy is it for the following to get information from users?
@@ -1294,7 +1341,9 @@ userinf4 <- data.frame(Statement=factor(rep(userinf4.statements, each=length(dat
                         data4$userinf.mng,
                         data4$userinf.ux.designer,
                         data4$userinf.dev,
-                        data4$userinf.slf))
+                        data4$userinf.slf),
+                      Jobf = data4$role,
+                      Comp = "Reaktor")
 ggplot(data=userinf4, aes(x=Statement, y=Rating, fill=Statement)) +
   geom_boxplot() + guides(fill=FALSE) + coord_flip() 
 
@@ -1304,7 +1353,9 @@ infofreq4 <- data.frame(Statement=factor(rep(infofreq4.statements, each=length(d
                          data4$infofreq.O2,
                          data4$infofreq.O3,
                          data4$infofreq.O4,
-                         data4$infofreq.O5))
+                         data4$infofreq.O5),
+                       Jobf = data4$role,
+                       Comp = 'Reaktor')
 ggplot(data=infofreq4, aes(x=Statement, y=Rating, fill=Statement)) + geom_boxplot() + guides(fill=FALSE) + coord_flip() 
 
 #2.5 Try to remember a situation
@@ -1326,7 +1377,9 @@ understanding4 <- data.frame(Statement=factor(rep(understanding4.statements, eac
                               data4$understanding.S3,
                               data4$understanding.S4,
                               data4$understanding.S5,
-                              data4$understanding.S6))
+                              data4$understanding.S6),
+                            Jobf = data4$role,
+                            Comp = 'Reaktor')
 ggplot(data=understanding4, aes(x=Statement, y=Rating, fill=Statement)) +
   geom_boxplot() + guides(fill=FALSE) + coord_flip() + scale_x_discrete(limits=c("..we need to measure user behaviour to decide what the software should be like","..users themselves must be actively involved in shaping the software", "..focused data on a specific user action or behaviour is useful", "..rich, detailed data about what users do is useful", "..data should only be collected when there is a known need or assumption", "..data should always be collected because it might be needed later" )) + theme(axis.text=element_text(size=11))
 # 4.1 How much do you agree with the following statements regarding notifying users about experiments? Please answer according to your personal beliefs.
@@ -1338,9 +1391,9 @@ undernotif4 <- data.frame(Statement=factor(rep(usernotif4.statements, each=lengt
                             data4$usernotif.S4,
                             data4$usernotif.S5,
                             data4$usernotif.S6,
-                            data4$usernotif.S7)
-                          ,Jobf = data4$role)
-
+                            data4$usernotif.S7),
+                          Jobf = data4$role,
+                          Comp = 'Reaktor')
 ggplot(data=undernotif4, aes(x=Statement, y=Rating, fill=Statement)) +
   geom_boxplot() + guides(fill=FALSE) + coord_flip() + theme(axis.text=element_text(size=11)) + ggtitle("Reaktor")
 
@@ -1354,7 +1407,8 @@ expinv4 <- data.frame(Statement=factor(rep(expinv4.statements, each=length(data4
                         data4$expinv.S5,
                         data4$expinv.S6,
                         data4$expinv.S7),
-                      Jobf = data4$role)
+                      Jobf = data4$role,
+                      Comp = 'Reaktor')
 ggplot(data=expinv4, aes(x=Statement, y=Rating, fill=Statement)) +
   geom_boxplot() + guides(fill=FALSE) + coord_flip() + theme(axis.text=element_text(size=11))
 
