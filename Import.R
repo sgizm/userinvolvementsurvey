@@ -205,7 +205,7 @@ summary(worktime)
 ggplot(data1, aes(x=data1$worktime)) +
   geom_histogram(binwidth=12, fill="#FF9999", colour="#FF9999") +
   labs(x="Ericsson work time", y="Frequency") + theme(axis.text=element_text(size=13)) +
-  scale_x_continuous(breaks=c(1, 12, 24, 36, 48, 60, 72, 96, 108, 120, 132), labels=c("<1y", "1y", "2y","3y", "4y", "5y","6y", "8y", "9y", "10y", ">10y")) + scale_y_continuous(breaks=c(0,1,4,5,6,7,8,9), labels = c("0", "1", "4", "5", "6","7", "8", "9"))
+  scale_x_continuous(breaks=c(1, 12, 24, 36, 48, 60, 72, 96, 108, 120, 132), labels=c("<1y", "1y", "2y","3y", "4y", "5y","6y", "8y", "9y", "10y", ">10y")) + scale_y_continuous(breaks=c(0,1,2,3,4,5,6,7,8,11), labels = c("0", "1", "2","3", "4", "5", "6","7", "8","11"))
 
 ggplot(data1, aes(x=worktime)) + 
   geom_histogram(aes(y=..density..),# Histogram with density instead of count on y-axis
@@ -289,9 +289,26 @@ userinv1 <- data.frame(Statement=factor(rep(userinv1.statements, each=length(dat
                       Jobf = data1$role,
                       Comp = "Ericsson"
 )
+# Changing the order:
+userinv1$Jobf_1 = factor(userinv1$Jobf, levels=c('Developer','Manager','UX designer','Other'))
+
 ggplot(userinv1, aes(x=Statement, y=Rating, fill=Statement)) +
-  geom_boxplot() + guides(fill=FALSE) + coord_flip() +
-  facet_wrap(~userinv1$Jobf)
+  geom_boxplot(fill="white", colour="black") + guides(fill=FALSE) + coord_flip() +
+  theme(axis.title.x=element_blank(),
+        #axis.text.y=element_blank(),
+        #axis.ticks.x=element_blank(),
+        axis.title.y=element_blank())
+#+
+  #facet_wrap(~userinv1$Jobf_1, ncol = 3)
+
+# Removing other category:
+ggplot(subset(userinv1, Jobf_1 %in% c("Developer", "Manager", "UX designer")), aes(x=Statement, y=Rating, fill=Statement)) +
+  geom_boxplot(fill="white", colour="black") + guides(fill=FALSE) + coord_flip() +
+  facet_wrap(~Jobf_1) +
+  theme(axis.title.x=element_blank(),
+        axis.text.y=element_blank(),
+        #axis.ticks.x=element_blank(),
+        axis.title.y=element_blank())
 
 # 2.3 In your experience, how easy is it for the following to get information from users?
 userinf1 <- data.frame(Statement=factor(rep(userinf1.statements, each=length(data1$userinf.mgr))),
@@ -303,7 +320,11 @@ userinf1 <- data.frame(Statement=factor(rep(userinf1.statements, each=length(dat
                       Jobf = data1$role,
                       Comp = "Ericsson")
 ggplot(userinf1, aes(x=Statement, y=Rating, fill=Statement)) +
-  geom_boxplot() + guides(fill=FALSE) + coord_flip()
+  geom_boxplot(fill="white", colour="black") + guides(fill=FALSE) + coord_flip() + scale_x_discrete(limits=c("Myself","UX designers", "Managers", "Developers")) +
+  theme(axis.title.x=element_blank(),
+        #axis.text.x=element_blank(),
+        #axis.ticks.x=element_blank(),
+        axis.title.y=element_blank())
 
 # 2.4 How often do you use the following ways to get information about users?
 infofreq1 <- data.frame(Statement=factor(rep(infofreq1.statements, each=length(data1$infofreq.O1))),
@@ -315,7 +336,7 @@ infofreq1 <- data.frame(Statement=factor(rep(infofreq1.statements, each=length(d
                        Jobf = data1$role,
                        Comp = 'Ericsson')
 ggplot(infofreq1, aes(x=Statement, y=Rating, fill=Statement)) +
-  geom_boxplot() + guides(fill=FALSE) + coord_flip()
+  geom_boxplot(fill="white", colour="black") + guides(fill=FALSE) + coord_flip()
 
 # 3.1 Does your company conduct experiments involving the users?
 ggplot(data1, aes(x=condexp)) +
@@ -333,8 +354,25 @@ understanding1 <- data.frame(Statement=factor(rep(understanding1.statements, eac
                               data1$understanding.S6),
                             Jobf = data1$role,
                             Comp = 'Ericsson')
+# Changing the order:
+understanding1$Jobf_1 = factor(understanding1$Jobf, levels=c('Developer','Manager','UX designer','Other'))
 ggplot(understanding1, aes(x=Statement, y=Rating, fill=Statement)) +
-  geom_boxplot() + guides(fill=FALSE) + coord_flip()
+  geom_boxplot(fill="white", colour="black") + guides(fill=FALSE) + coord_flip() +
+  theme(axis.title.x=element_blank(),
+        axis.text.y=element_blank(),
+        #axis.ticks.x=element_blank(),
+        axis.title.y=element_blank()
+        ) +
+  facet_wrap(~understanding1$Jobf_1, ncol = 3)
+
+# Removing other category
+ggplot(subset(understanding1, Jobf_1 %in% c("Developer", "Manager", "UX designer")), aes(x=Statement, y=Rating, fill=Statement)) +
+  geom_boxplot(fill="white", colour="black") + guides(fill=FALSE) + coord_flip() +
+  facet_wrap(~Jobf_1) +
+  theme(axis.title.x=element_blank(),
+        axis.text.y=element_blank(),
+        #axis.ticks.x=element_blank(),
+        axis.title.y=element_blank())
 
 # 4.1 How much do you agree with the following statements regarding notifying users about experiments? Please answer according to your personal beliefs.
 undernotif1 <- data.frame(Statement=factor(rep(usernotif1.statements, each=length(data1$usernotif.S1))),
@@ -549,7 +587,12 @@ print("How long have you been working in your current role")
 summary(data2$worktime)
 ggplot(data2, aes(x=worktime)) +
   geom_histogram(binwidth=12, colour="black", fill="white") +
-  labs(x="Work time", y="Frequency") + scale_x_continuous(breaks=c(3,12,24,36,84), labels=c("<3m", "1y","2y", "3y","7y")) + scale_y_continuous(breaks=c(0,1,2), labels = c("0", "1", "2"))
+  labs(x="Work time", y="Frequency") + scale_x_continuous(breaks=c(3,12,24,36,84), labels=c("<3m", "1y","2y", "3y","7y")) + scale_y_continuous(breaks=c(0,1,2), labels = c("0", "1", "2")) +
+  theme(axis.title.x=element_blank(),
+        #axis.text.y=element_blank(),
+        #axis.ticks.x=element_blank(),
+        axis.title.y=element_blank())
+
 
 # Gender
 print("Gender")
@@ -562,8 +605,12 @@ ggplot(data2, aes(x=gender)) +
 print("Age range")
 summary(data2$age_range)
 ggplot(data2, aes(x=age_range)) +
-  geom_bar(fill="lightgoldenrod2", colour="white") +
-  labs(x="Age range", y="Frequency")
+  geom_bar(fill="white", colour="black") +
+  labs(x="Age range", y="Frequency") +
+  theme(axis.title.x=element_blank(),
+        #axis.text.y=element_blank(),
+        #axis.ticks.x=element_blank(),
+        axis.title.y=element_blank())
 
 # Team size
 print("Team size")
