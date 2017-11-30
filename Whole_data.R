@@ -165,7 +165,11 @@ View(undernotif2[ which(undernotif2$Statement=='It is ok not to disclose all the
 # 4.2
 expinv <- rbind(expinv1, expinv2, expinv3, expinv4)
 ggplot(expinv, aes(x=Statement, y=Rating, fill=Statement)) +
-  geom_boxplot(fill="white", colour="black") + guides(fill=FALSE) + theme(axis.text=element_text(size=11)) + ggtitle("Total") + scale_x_discrete(limits=c("I cannot trust that the experiment results will be correct", "Involving users in experiments is time-consuming", "My customer does not have the needed technical infrastructure", "Users would not like to be part of software experiments", "Users have to be convinced of the benefit before taking part", "Experiments give users false expectations", "Experiments reveal secrets about my customer's strategy"))  + theme(axis.title.x=element_blank(), axis.text.x=element_blank(), axis.ticks.x=element_blank())
+  geom_boxplot(fill="white", colour="black") + guides(fill=FALSE) + theme(axis.text=element_text(size=11)) + ggtitle("Total") + scale_x_discrete(limits=c("I cannot trust that the experiment results will be correct", "Involving users in experiments is time-consuming", "My customer does not have the needed technical infrastructure", "Users would not like to be part of software experiments", "Users have to be convinced of the benefit before taking part", "Experiments give users false expectations", "Experiments reveal secrets about my customer's strategy"))  + 
+  theme(axis.title.x=element_blank(), 
+        #axis.text.x=element_blank(), 
+        axis.ticks.x=element_blank()) + 
+  coord_flip()
 
 # with colors
 ggplot(expinv, aes(x=Statement, y=Rating, fill=Statement)) +

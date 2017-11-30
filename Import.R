@@ -63,7 +63,7 @@ data1$age <- CURRENTYEAR - data1$birthyear
 data1$age_range <- recode(data1$age, "1:20='20 or less'; 21:30='21-30'; 31:40='31-40'; 41:50='41-50'; 50:9999='50 or more'")
 
 
-data1$gender <- factor(data1$X1.4.Which.of.the.following.best.describes.you..,
+data1$gende <- factor(data1$X1.4.Which.of.the.following.best.describes.you..,
                       levels = c("F", "M", "NA"),
                       labels = c("Female", "Male", "Other / prefer not to say"))
 
@@ -72,7 +72,7 @@ data1$teamsize <- factor(data1$X1.5.What.is.the.size.of.your.primary.work.team..
                         labels = c("< 3", "3-5", "6-10", "11-20", ">20", "No team"))
 
 
-# 2.1 In which development activities are users involved in your company? (click all that apply)
+# 2.1 In whch development activities are users involved in your company? (click all that apply)
 data1$useractivities.specifying.requirements <- data1$Specifying.requirements
 data1$useractivities.designing.software <- data1$Designing.software
 data1$useractivities.implementing.software <- data1$Implementing.software
@@ -290,7 +290,7 @@ userinv1 <- data.frame(Statement=factor(rep(userinv1.statements, each=length(dat
                       Comp = "Ericsson"
 )
 # Changing the order:
-userinv1$Jobf_1 = factor(userinv1$Jobf, levels=c('Developer','Manager','UX designer','Other'))
+#userinv1$Jobf = factor(userinv1$Jobf, levels=c('Developer','Manager','UX designer','Other'))
 
 ggplot(userinv1, aes(x=Statement, y=Rating, fill=Statement)) +
   geom_boxplot(fill="white", colour="black") + guides(fill=FALSE) + coord_flip() +
@@ -302,9 +302,9 @@ ggplot(userinv1, aes(x=Statement, y=Rating, fill=Statement)) +
   #facet_wrap(~userinv1$Jobf_1, ncol = 3)
 
 # Removing other category:
-ggplot(subset(userinv1, Jobf_1 %in% c("Developer", "Manager", "UX designer")), aes(x=Statement, y=Rating, fill=Statement)) +
+ggplot(subset(userinv1, Jobf %in% c("Developer", "Manager", "UX designer")), aes(x=Statement, y=Rating, fill=Statement)) +
   geom_boxplot(fill="white", colour="black") + guides(fill=FALSE) + coord_flip() +
-  facet_wrap(~Jobf_1) +
+  facet_wrap(~Jobf) +
   theme(axis.title.x=element_blank(),
         axis.text.y=element_blank(),
         #axis.ticks.x=element_blank(),
@@ -355,7 +355,7 @@ understanding1 <- data.frame(Statement=factor(rep(understanding1.statements, eac
                             Jobf = data1$role,
                             Comp = 'Ericsson')
 # Changing the order:
-understanding1$Jobf_1 = factor(understanding1$Jobf, levels=c('Developer','Manager','UX designer','Other'))
+#understanding1$Jobf_1 = factor(understanding1$Jobf, levels=c('Developer','Manager','UX designer','Other'))
 ggplot(understanding1, aes(x=Statement, y=Rating, fill=Statement)) +
   geom_boxplot(fill="white", colour="black") + guides(fill=FALSE) + coord_flip() +
   theme(axis.title.x=element_blank(),
@@ -363,12 +363,12 @@ ggplot(understanding1, aes(x=Statement, y=Rating, fill=Statement)) +
         #axis.ticks.x=element_blank(),
         axis.title.y=element_blank()
         ) +
-  facet_wrap(~understanding1$Jobf_1, ncol = 3)
+  facet_wrap(~understanding1$Jobf, ncol = 3)
 
 # Removing other category
-ggplot(subset(understanding1, Jobf_1 %in% c("Developer", "Manager", "UX designer")), aes(x=Statement, y=Rating, fill=Statement)) +
+ggplot(subset(understanding1, Jobf %in% c("Developer", "Manager", "UX designer")), aes(x=Statement, y=Rating, fill=Statement)) +
   geom_boxplot(fill="white", colour="black") + guides(fill=FALSE) + coord_flip() +
-  facet_wrap(~Jobf_1) +
+  facet_wrap(~Jobf) +
   theme(axis.title.x=element_blank(),
         axis.text.y=element_blank(),
         #axis.ticks.x=element_blank(),
@@ -804,8 +804,8 @@ data3$useractivities.online.discussion <- data3$Participating.in.online.discussi
 data3$useractivities.other <- data3$Other
 useractivities3.options <- c("Specifiying requirements", "Software design", "Implementation", "Testing", "The activities after release", "Other")
 
-#Other roles
-data3$useractivities.other.open <- data3$If.other..please.specify
+#Other activities
+data3$useractivities.other.open <- data3$If.other..please.specify.1
 
 # 2.2. How much do you agree with the following statements? (User involvement statements)
 data3$userinv.S1 <- data3$X2.2..How.much.do.you.agree.with.the.following.statements...I.know.who.uses.the.software.I.contribute.to.in.my.work
@@ -953,19 +953,44 @@ ggplot(data3, aes(x=age)) +
                  colour="black", fill="white") +
   geom_density(alpha=.2, fill="#FF9999", colour="#FF9999")  # Overlay with transparent density plot
 
+print("Age range")
+summary(data3$age_range)
+ggplot(data3, aes(x=age_range)) +
+  geom_bar(fill="white", colour="black") +
+  labs(x="Age range", y="Frequency") +
+  theme(axis.title.x=element_blank(),
+        #axis.text.y=element_blank(),
+        #axis.ticks.x=element_blank(),
+        axis.title.y=element_blank()) +
+  scale_y_continuous(breaks=c(0, 1, 2, 4, 5, 9), labels = c("0", "1", "2", "4", "5", "9")) +
+  theme(axis.text=element_text(size=13))
+
+
 # Work time
 print("How long have you been working in your current role")
 summary(data3$worktime)
 ggplot(data3, aes(x=worktime)) +
   geom_histogram(binwidth=12, colour="black", fill="white") +
-  labs(x="Work time", y="Frequency")  + theme(axis.text=element_text(size=10))+ scale_x_continuous(breaks=c(4,7,12,24,36,60,120), labels=c("<4m", "7m","1y", "2y","3y","5y", "10y")) + scale_y_continuous(breaks=c(0,1,2,3,4,5,6), labels = c("0", "1", "2", "3", "4", "5", "6"))
+  labs(x="Work time", y="Frequency")  + theme(axis.text=element_text(size=13)) + 
+  scale_x_continuous(breaks=c(0,12,24,60,120), labels=c("<6m","1y","2y","5y", "10y")) + 
+  scale_y_continuous(breaks=c(0,1,2,3,4,5,6), labels = c("0", "1", "2", "3", "4", "5", "6")) +
+  theme(axis.title.x=element_blank(),
+        #axis.text.y=element_blank(),
+        #axis.ticks.x=element_blank(),
+        axis.title.y=element_blank())
+
 
 # Team size
 print("Team size")
 summary(data3$teamsize)
 ggplot(data3, aes(x=teamsize)) +
-  geom_bar(fill="lightgoldenrod2", colour="white") +
-  labs(x="Team size", y="Frequency") + theme(axis.text=element_text(size=13)) + scale_y_continuous(breaks=c(0,2,3,5,8), labels = c("0", "2", "3", "5", "8"))
+  geom_bar(fill="white", colour="black") +
+  labs(x="Team size", y="Frequency") + theme(axis.text=element_text(size=13)) + 
+  scale_y_continuous(breaks=c(0,2,3,5,8), labels = c("0", "2", "3", "5", "8")) +
+  theme(axis.title.x=element_blank(),
+        #axis.text.y=element_blank(),
+        #axis.ticks.x=element_blank(),
+        axis.title.y=element_blank())
 
 # Work location
 print("Work location")
@@ -1021,8 +1046,9 @@ userinv3 <- data.frame(Statement=factor(rep(userinv3.statements, each=length(dat
                       Comp = "Vaadin"
                       )
 ggplot(data=userinv3, aes(x=Statement, y=Rating, fill=Statement)) +
-  geom_boxplot() + guides(fill=FALSE) + coord_flip() + theme(axis.text=element_text(size=16)) +
-  facet_wrap(~userinv3$Jobf)
+  geom_boxplot() + guides(fill=FALSE) + coord_flip() + theme(axis.text=element_text(size=16)) 
+#+
+#  facet_wrap(~userinv3$Jobf)
 # + scale_y_discrete(name="Rating", limits=c("1","2", "3","4","5"))
 
 # 2.3 In your experience, how easy is it for the following to get information from users?
@@ -1087,7 +1113,8 @@ undernotif3 <- data.frame(Statement=factor(rep(usernotif3.statements, each=lengt
                           Jobf = data3$role,
                           Comp = 'Vaadin')
 ggplot(data=undernotif3, aes(x=Statement, y=Rating, fill=Statement)) +
-  geom_boxplot() + guides(fill=FALSE) + coord_flip() + theme(axis.text=element_text(size=11)) + ggtitle("Vaadin")
+  geom_boxplot() + guides(fill=FALSE) + coord_flip() + theme(axis.text=element_text(size=11)) + 
+  ggtitle("Vaadin")
 
 # 4.2 How much do you agree with the following statements about involving users in experiments? Please answer according to your personal beliefs.
 expinv3 <- data.frame(Statement=factor(rep(expinv3.statements, each=length(data3$expinv.S1))),
@@ -1288,11 +1315,11 @@ expinv4.options <- c("Completely disagree", "Disagree", "Neither disagree or agr
 attach(data4)
 print("Primary job function")
 summary(jobfunction4)
-ggplot(data4, aes(x=jobfunction4)) +
+ggplot(data4, aes(x=role)) +
   geom_bar(fill="#FF9999", colour="white") +
   labs(x="Job functions", y="Frequency") + theme(axis.text=element_text(size=13), axis.text.x = element_text(angle = 45, vjust = 1, hjust=1)) + scale_y_continuous(breaks=c(0, 2, 3, 12, 43), labels = c("0", "2", "3", "12", "43"))
 
-data4$jobfunction.other
+data4$jobfunction4.other
 
 # Gender
 print("Gender")
@@ -1305,22 +1332,37 @@ ggplot(data4, aes(x=gender)) +
 print("Age range")
 summary(data4$age_range)
 ggplot(data4, aes(x=age_range)) +
-  geom_bar(fill="lightgoldenrod2", colour="white") +
-  labs(x="Age range", y="Frequency") + scale_y_continuous(breaks=c(0, 14, 16, 36), labels = c("0", "14", "16", "36"))
+  geom_bar(fill="white", colour="black") +
+  labs(x="Age range", y="Frequency") + scale_y_continuous(breaks=c(0, 14, 16, 36), labels = c("0", "14", "16", "36")) +
+  theme(axis.title.x=element_blank(),
+        #axis.text.y=element_blank(),
+        #axis.ticks.x=element_blank(),
+        axis.title.y=element_blank()) +
+  theme(axis.text=element_text(size=13))
 
 # Work time
 print("How long have you been working in your current role")
 summary(data4$worktime)
 ggplot(data4, aes(x=worktime)) +
   geom_histogram(binwidth=12, colour="black", fill="white") +
-  labs(x="Work time", y="Frequency")  + theme(axis.text=element_text(size=10))+ scale_x_continuous(breaks=c(1, 12, 24, 36, 48, 60, 72, 96, 108, 120, 132), labels=c("<1y", "1y", "2y","3y", "4y", "5y","6y", "8y", "9y", "10y", ">10y")) + scale_y_continuous(breaks=c(0,1,4,5,6,7,8,9), labels = c("0", "1", "4", "5", "6","7", "8", "9"))
+  labs(x="Work time", y="Frequency")  + theme(axis.text=element_text(size=13))+ 
+  scale_x_continuous(breaks=c(1, 12, 24, 36, 48, 60, 72, 96, 108, 120, 132), labels=c("<1y", "1y", "2y","3y", "4y", "5y","6y", "8y", "9y", "10y", ">10y")) + scale_y_continuous(breaks=c(0,1,4,5,6,7,8,9), labels = c("0", "1", "4", "5", "6","7", "8", "9")) +
+  theme(axis.title.x=element_blank(),
+        #axis.text.y=element_blank(),
+        #axis.ticks.x=element_blank(),
+        axis.title.y=element_blank())
 
 # Team size
 print("Team size")
 summary(data4$teamsize)
 ggplot(data4, aes(x=teamsize)) +
-  geom_bar(fill="lightgoldenrod2", colour="white") +
-  labs(x="Team size", y="Frequency") + theme(axis.text=element_text(size=13)) + scale_y_continuous(breaks=c(0,3,6,10,20,27), labels = c("0", "3", "6", "10", "20","27"))
+  geom_bar(fill="white", colour="black") +
+  labs(x="Team size", y="Frequency") + theme(axis.text=element_text(size=13)) + 
+  scale_y_continuous(breaks=c(0,3,6,10,20,27), labels = c("0", "3", "6", "10", "20","27")) +
+  theme(axis.title.x=element_blank(),
+        #axis.text.y=element_blank(),
+        #axis.ticks.x=element_blank(),
+        axis.title.y=element_blank())
 
 # Work location
 print("Work location")
@@ -1361,7 +1403,8 @@ useractivities4 <- data.frame(Activity=useractivities4.options,
 print("Frequencies of development activities that users are involved in")
 summary(useractivities4)
 ggplot(data=useractivities4, aes(x=Activity, y=Frequency)) +
-  geom_bar(stat="identity", fill="plum4", colour="black") + theme(axis.text=element_text(size=14), axis.text.x = element_text(angle = 45, vjust = 1, hjust=1))+ scale_x_discrete(limits=c("Specifying requirements", "Software design", "Implementation", "Testing", "The activities after release", "Other")) + scale_y_continuous(breaks=c(0,99,74,27,48,46,5), labels = c("0", "99", "74", "27", "48", "46", "5"))
+  geom_bar(stat="identity", fill="plum4", colour="black") + 
+  theme(axis.text=element_text(size=13), axis.text.x = element_text(angle = 45, vjust = 1, hjust=1))+ scale_x_discrete(limits=c("Specifying requirements", "Software design", "Implementation", "Testing", "The activities after release", "Other")) + scale_y_continuous(breaks=c(0,99,74,27,48,46,5), labels = c("0", "99", "74", "27", "48", "46", "5"))
 
 
 # 2.2 How much do you agree with the following statements?
