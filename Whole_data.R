@@ -18,11 +18,16 @@ source(file='Import.R')
 
 # First, make company-specific data frames that all have exactly the same columns
 # which( colnames(data4)=="condexp" ) to check column indexes
-cols1 <- c(2:5, 7, 42:55, 58, 59, 62:64, 90) # Ericsson
-cols2 <- c(2:5, 6, 53:66, 81, 82, 84, 83, 85, 121) # F-secure
-cols3 <- c(2:5, 7, 56:69, 72, 73, 77, 74, 78, 118) # Vaadin
-cols4 <- c(2:5, 6, 50:63, 77, 78, 80, 79, 81, 115) # Reaktor
-clus_colnames  <- c("SUBTIME", "JOBFUNC", "JOBFUNCOTHER", "JOBTIME", "GENDER", "INVA", "INVB", "INVC", "INVD", "INVE", "INVF", "INVG", "INVH", "INVI", "INVJ", "INVK", "INVL", "INVM", "INVN", "ROLE", "worktime", "age_range","gender", "team_size", "condexp" )
+#cols1 <- c(2:5, 7, 42:55, 58, 59, 62:64, 90) # Ericsson
+cols1 <- c(2:5, 7, 42:55, 58, 59, 62:64, 72:80, 84, 90, 92:97) # Ericsson
+#cols2 <- c(2:5, 6, 53:66, 81, 82, 84, 83, 85, 121) # F-secure
+cols2 <- c(2:5, 6, 53:66, 81, 82, 84, 83, 85, 97:102, 104, 105, 108, 113, 121, 123:128) # F-secure
+#cols3 <- c(2:5, 7, 56:69, 72, 73, 77, 74, 78, 118) # Vaadin
+cols3 <- c(2:5, 7, 56:69, 72, 73, 77, 74, 78, 93:98, 101:103, 110, 118, 120:125) # Vaadin
+#cols4 <- c(2:5, 6, 50:63, 77, 78, 80, 79, 81, 115) # Reaktor
+cols4 <- c(2:5, 6, 50:63, 77, 78, 80, 79, 81, 94:99, 102, 104, 101, 107, 115, 117:122) # Reaktor
+
+clus_colnames  <- c("SUBTIME", "JOBFUNC", "JOBFUNCOTHER", "JOBTIME", "GENDER", "INVA", "INVB", "INVC", "INVD", "INVE", "INVF", "INVG", "INVH", "INVI", "INVJ", "INVK", "INVL", "INVM", "INVN", "ROLE", "worktime", "age_range","gender", "team_size", "USERINVA","USERINVB","USERINVC","USERINVD","USERINVE","USERINVF", "USERINF.MNG","USERINF.UX", "USERINF.DEV", "USERINF.SLF", "condexp", "UNDERSTANDINGA", "UNDERSTANDINGB","UNDERSTANDINGC","UNDERSTANDINGD","UNDERSTANDINGE", "UNDERSTANDINGF")
 clus_data1 <- data1[, cols1]
 names(clus_data1) <- clus_colnames
 clus_data2 <- data2[, cols2]

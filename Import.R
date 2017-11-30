@@ -289,8 +289,6 @@ userinv1 <- data.frame(Statement=factor(rep(userinv1.statements, each=length(dat
                       Jobf = data1$role,
                       Comp = "Ericsson"
 )
-# Changing the order:
-#userinv1$Jobf = factor(userinv1$Jobf, levels=c('Developer','Manager','UX designer','Other'))
 
 ggplot(userinv1, aes(x=Statement, y=Rating, fill=Statement)) +
   geom_boxplot(fill="white", colour="black") + guides(fill=FALSE) + coord_flip() +
@@ -299,7 +297,7 @@ ggplot(userinv1, aes(x=Statement, y=Rating, fill=Statement)) +
         #axis.ticks.x=element_blank(),
         axis.title.y=element_blank())
 #+
-  #facet_wrap(~userinv1$Jobf_1, ncol = 3)
+  #facet_wrap(~userinv1$Jobf, ncol = 3)
 
 # Removing other category:
 ggplot(subset(userinv1, Jobf %in% c("Developer", "Manager", "UX designer")), aes(x=Statement, y=Rating, fill=Statement)) +
@@ -354,8 +352,7 @@ understanding1 <- data.frame(Statement=factor(rep(understanding1.statements, eac
                               data1$understanding.S6),
                             Jobf = data1$role,
                             Comp = 'Ericsson')
-# Changing the order:
-#understanding1$Jobf_1 = factor(understanding1$Jobf, levels=c('Developer','Manager','UX designer','Other'))
+
 ggplot(understanding1, aes(x=Statement, y=Rating, fill=Statement)) +
   geom_boxplot(fill="white", colour="black") + guides(fill=FALSE) + coord_flip() +
   theme(axis.title.x=element_blank(),
