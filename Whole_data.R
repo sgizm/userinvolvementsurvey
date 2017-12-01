@@ -39,11 +39,11 @@ names(clus_data4) <- clus_colnames
 
 # Second, concatenate the company names' column
 clus_data <- rbind(clus_data1, clus_data2, clus_data3, clus_data4)
-clus_data[1:35,26] <- "Ericsson"
-clus_data[36:43,26] <- "F-secure"
-clus_data[44:64,26] <- "Vaadin"
-clus_data[65:130,26] <- "Reaktor"
-names(clus_data)[26] <- "COMPANY"
+clus_data[1:35,42] <- "Ericsson"
+clus_data[36:43,42] <- "F-secure"
+clus_data[44:64,42] <- "Vaadin"
+clus_data[65:130,42] <- "Reaktor"
+names(clus_data)[42] <- "COMPANY"
 
 
 ## DEMOGRAPHICS ##
@@ -181,4 +181,80 @@ ggplot(expinv, aes(x=Statement, y=Rating, fill=Statement)) +
   geom_boxplot() + guides(fill=FALSE) + theme(axis.text =element_text(size=7))  +  ggtitle("Total_ethics2") + coord_flip() + 
   facet_wrap(~expinv$Jobf+Comp)
 
+### CORRELATIONS ###
 
+cols <- c(6:19, 25:34, 36:41) # Selecting the numerical columns
+clus_data_selected <- clus_data[, cols]
+
+# and a scaled version of that with NA's removed
+clus_data_scaled <- scale(na.omit(clus_data_selected))
+
+
+## Correlation matrix
+
+cor_matrix <- cor(clus_data_selected, use = "pairwise.complete.obs")
+print(cor_matrix %>% round(2))
+# add order = "hclust" as a parameter below for clustering of correlation coefficients
+corrplot.mixed(cor_matrix, lower = "number", upper = "circle", order = "hclust")
+
+# get the  most significant correlations (p > 0.05): 
+correlations <- rcorr(as.matrix(clus_data_scaled))
+for (i in 1:30){
+  for (j in 1:30){
+    if ( !is.na(correlations$P[i,j])){
+      if ( correlations$P[i,j] < 0.05 ) {
+        print(paste(rownames(correlations$P)[i], "-" , colnames(correlations$P)[j], ": ", correlations$P[i,j]))
+      }}}}
+
+# heatmap
+col <- colorRampPalette(c("darkblue", "white", "darkorange"))(20) # get some colors
+heatmap(x = cor_matrix, col=col, symm = TRUE)
+
+#alternative views
+library("PerformanceAnalytics")
+chart.Correlation(cor_matrix, histogram = TRUE, pch = 19)
+
+# Hierarchical clustering of observations with company identifiers
+d2 <- dist(clus_data_scaled, method="euclidean")
+hcl2 <- hclust(d2, method="ward.D2")
+plot(hcl2, cex=.5)
+groups2 <- cutree(hcl2, k=3)
+
+# to look at the clusters a bit, e.g.: 
+table(groups2)
+summary(clus_data$ROLE[groups2 == 1])
+rect.hclust(hcl2, k=3, border="red")
+# shows each clusters' roles
+sapply(unique(groups2),function(g)clus_data$ROLE[groups2== g])
+
+
+# another heatmap
+#heatmap with company identifiers
+library(gplots)
+# get a color palette equal to the number of clusters
+clusterCols <- rainbow(length(unique(groups2)))
+# create vector of colors for side bar
+myClusterSideBar <- clusterCols[groups2]
+# choose a color palette for the heat map
+myheatcol <- rev(redgreen(75))
+# draw the heat map
+heatmap.2(clus_data_scaled, main="Hierarchical Cluster", Rowv=as.dendrogram(hcl2), Colv=NA, dendrogram="row", scale="row", col=myheatcol, density.info="none", trace="none", RowSideColors= myClusterSideBar)
+
+
+## Principal components analysis
+
+pc <- princomp(cor_matrix, cor=TRUE)
+summary(pc)
+loadings(pc)
+plot(pc, type="lines") # indicates 3 main components
+print(pc$scores)
+biplot(pc)
+
+## Factor analysis
+
+# How many factors?
+library(nFactors)
+ev <- eigen(cor_matrix)
+ap <- parallel(subject = nrow(na.omit(clus_data_selected)), var = ncol(na.omit(clus_data_selected)), rep = 100, cent = .05)
+nS <- nScree(x = ev$values, aparallel = ap$eigen$qevpea)
+plotnScree(nS) 
