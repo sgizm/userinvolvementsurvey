@@ -18,16 +18,12 @@ source(file='Import.R')
 
 # First, make company-specific data frames that all have exactly the same columns
 # which( colnames(data4)=="condexp" ) to check column indexes
-#cols1 <- c(2:5, 7, 42:55, 58, 59, 62:64, 90) # Ericsson
 cols1 <- c(2:5, 7, 42:55, 58, 59, 62:64, 72:80, 84, 90, 92:97) # Ericsson
-#cols2 <- c(2:5, 6, 53:66, 81, 82, 84, 83, 85, 121) # F-secure
 cols2 <- c(2:5, 6, 53:66, 81, 82, 84, 83, 85, 97:102, 104, 105, 108, 113, 121, 123:128) # F-secure
-#cols3 <- c(2:5, 7, 56:69, 72, 73, 77, 74, 78, 118) # Vaadin
 cols3 <- c(2:5, 7, 56:69, 72, 73, 77, 74, 78, 93:98, 101:103, 110, 118, 120:125) # Vaadin
-#cols4 <- c(2:5, 6, 50:63, 77, 78, 80, 79, 81, 115) # Reaktor
 cols4 <- c(2:5, 6, 50:63, 77, 78, 80, 79, 81, 94:99, 102, 104, 101, 107, 115, 117:122) # Reaktor
 
-clus_colnames  <- c("SUBTIME", "JOBFUNC", "JOBFUNCOTHER", "JOBTIME", "GENDER", "INVA", "INVB", "INVC", "INVD", "INVE", "INVF", "INVG", "INVH", "INVI", "INVJ", "INVK", "INVL", "INVM", "INVN", "ROLE", "worktime", "age_range","gender", "team_size", "USERINVA","USERINVB","USERINVC","USERINVD","USERINVE","USERINVF", "USERINF.MNG","USERINF.UX", "USERINF.DEV", "USERINF.SLF", "condexp", "UNDERSTANDINGA", "UNDERSTANDINGB","UNDERSTANDINGC","UNDERSTANDINGD","UNDERSTANDINGE", "UNDERSTANDINGF")
+clus_colnames  <- c("SUBTIME", "JOBFUNC", "JOBFUNCOTHER", "JOBTIME", "GENDER", "INVA", "INVB", "INVC", "INVD", "INVE", "INVF", "INVG", "INVH", "INVI", "INVJ", "INVK", "INVL", "INVM", "INVN", "ROLE", "worktime", "age_range","gender", "team_size", "USERA","USERB","USERC","USERD","USERE","USERF", "INF.MNG","INF.UX", "INF.DEV", "INF.SLF", "condexp", "3.3A", "3.3B","3.3C","3.3D","3.3E", "3.3F")
 clus_data1 <- data1[, cols1]
 names(clus_data1) <- clus_colnames
 clus_data2 <- data2[, cols2]
@@ -189,13 +185,14 @@ clus_data_selected <- clus_data[, cols]
 # and a scaled version of that with NA's removed
 clus_data_scaled <- scale(na.omit(clus_data_selected))
 
-
 ## Correlation matrix
 
 cor_matrix <- cor(clus_data_selected, use = "pairwise.complete.obs")
 print(cor_matrix %>% round(2))
 # add order = "hclust" as a parameter below for clustering of correlation coefficients
 corrplot.mixed(cor_matrix, lower = "number", upper = "circle", order = "hclust")
+# simpler view:
+corrplot(cor_matrix, order = "hclust", addrect = 5)
 
 # get the  most significant correlations (p > 0.05): 
 correlations <- rcorr(as.matrix(clus_data_scaled))
@@ -205,6 +202,12 @@ for (i in 1:30){
       if ( correlations$P[i,j] < 0.05 ) {
         print(paste(rownames(correlations$P)[i], "-" , colnames(correlations$P)[j], ": ", correlations$P[i,j]))
       }}}}
+
+# highest correlations in each column:
+library(data.table)
+setDT(melt(cor_matrix))[Var1 != Var2, .SD[which.max(value)], keyby=Var1]
+setDT(melt(cor_matrix))[Var1 != Var2, .SD[which.min(value)], keyby=Var1]
+
 
 # heatmap
 col <- colorRampPalette(c("darkblue", "white", "darkorange"))(20) # get some colors
@@ -242,13 +245,15 @@ heatmap.2(clus_data_scaled, main="Hierarchical Cluster", Rowv=as.dendrogram(hcl2
 
 
 ## Principal components analysis
-
 pc <- princomp(cor_matrix, cor=TRUE)
 summary(pc)
 loadings(pc)
 plot(pc, type="lines") # indicates 3 main components
 print(pc$scores)
 biplot(pc)
+# to look at the eigenvalues:
+library("factoextra")
+get_eigenvalue(pc)
 
 ## Factor analysis
 
