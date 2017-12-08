@@ -594,7 +594,7 @@ ggplot(data2, aes(x=worktime)) +
 
 # Gender
 print("Gender")
-summary(daa2$gender)
+summary(data2$gender)
 ggplot(data2, aes(x=gender)) +
   geom_bar(fill="white", colour="black") +
   labs(x="Gender", y="Frequency")
@@ -701,7 +701,7 @@ ggplot(data2, aes(x=condexp)) +
 understanding2 <- data.frame(Statement=factor(rep(understanding2.statements, each=length(data2$understanding.S1))),
                             Rating=c(
                               data2$understanding.S1,
-            data2$understanding.S12$understanding.S2,
+                              data2$understanding.S2,                              
                               data2$understanding.S3,
                               data2$understanding.S4,
                               data2$understanding.S5,

@@ -185,7 +185,7 @@ clus_data_selected <- clus_data[, cols]
 # and a scaled version of that with NA's removed
 clus_data_scaled <- scale(na.omit(clus_data_selected))
 
-## Correlation matrix
+## Correlation matrix ##
 
 cor_matrix <- cor(clus_data_selected, use = "pairwise.complete.obs")
 print(cor_matrix %>% round(2))
@@ -207,7 +207,6 @@ for (i in 1:30){
 library(data.table)
 setDT(melt(cor_matrix))[Var1 != Var2, .SD[which.max(value)], keyby=Var1]
 setDT(melt(cor_matrix))[Var1 != Var2, .SD[which.min(value)], keyby=Var1]
-
 
 # heatmap
 col <- colorRampPalette(c("darkblue", "white", "darkorange"))(20) # get some colors
